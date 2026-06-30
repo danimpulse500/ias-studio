@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Header } from "@/components/shared/Header";
 
 // An interactive refraction element representing a lens prism for the about page
@@ -131,8 +132,36 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* --- VISION & MISSION SECTION --- */}
+      <section className="w-full bg-white dark:bg-black py-24 px-16 border-b border-zinc-100 dark:border-zinc-900">
+        <div className="w-full mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-16">
+          <div className="flex flex-col gap-4">
+            <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+              01 / Purpose
+            </span>
+            <h2 className="text-3xl md:text-4xl text-black dark:text-zinc-50 font-handwriting-thin leading-none tracking-wide">
+              Vision
+            </h2>
+            <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+              To become a leading visual institution that preserves human experience, cultural identity, and architectural form through timeless and disciplined visual storytelling.
+            </p>
+          </div>
+          <div className="flex flex-col gap-4">
+            <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+              02 / Execution
+            </span>
+            <h2 className="text-3xl md:text-4xl text-black dark:text-zinc-50 font-handwriting-thin leading-none tracking-wide">
+              Mission
+            </h2>
+            <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+              To document people, environments, and events with clarity and intention, transforming ordinary moments into structured visual narratives that communicate meaning and identity.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* --- TECHNICAL ARSENAL SECTION --- */}
-      <section className="w-full bg-white dark:bg-black py-24 px-16">
+      <section className="w-full bg-zinc-50 dark:bg-zinc-950 py-24 px-16">
         <div className="w-full mx-auto max-w-7xl flex flex-col md:flex-row gap-16 justify-between">
           <div className="flex flex-col gap-6 max-w-sm">
             <h2 className="text-3xl md:text-4xl text-black dark:text-zinc-50 font-handwriting-thin leading-none tracking-wide">
@@ -143,7 +172,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="flex-1 w-full max-w-xl aspect-video relative rounded-2xl overflow-hidden shadow-xl border border-zinc-100 dark:border-zinc-900 bg-zinc-50 dark:bg-zinc-950">
+          <div className="flex-1 w-full max-w-xl aspect-video relative rounded-2xl overflow-hidden shadow-xl border border-zinc-100 dark:border-zinc-900 bg-white dark:bg-black animate-fade-in">
             <Image
               src="/camera.png"
               alt="Professional cinema camera setup"
@@ -151,6 +180,53 @@ export default function AboutPage() {
               sizes="(max-w-768px) 100vw, 50vw"
               className="object-cover"
             />
+          </div>
+        </div>
+      </section>
+
+      {/* --- CORE VALUES SECTION --- */}
+      <section className="w-full bg-white dark:bg-black py-24 px-16 border-t border-b border-zinc-100 dark:border-zinc-900">
+        <div className="w-full mx-auto max-w-7xl flex flex-col gap-12">
+          <div className="flex flex-col gap-3 max-w-xl">
+            <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+              Beliefs
+            </span>
+            <h2 className="text-3xl md:text-4xl text-black dark:text-zinc-50 font-handwriting-thin leading-none tracking-wide">
+              Core Values
+            </h2>
+            <p className="text-base leading-7 text-zinc-600 dark:text-zinc-400">
+              The fundamental principles guiding our creative decisions, technical choices, and collaborative relationships.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 w-full mt-6">
+            {[
+              { id: 1, name: "Excellence", desc: "A commitment to refined execution and uncompromising quality." },
+              { id: 2, name: "Authenticity", desc: "A focus on truth, emotion, and unaltered presence." },
+              { id: 3, name: "Legacy Thinking", desc: "Every work is created to remain relevant beyond time." },
+              { id: 4, name: "Discipline", desc: "Structure and consistency in creative expression." },
+              { id: 5, name: "Cultural Respect", desc: "Deep regard for identity, tradition, and context." },
+              { id: 6, name: "Precision", desc: "Attention to detail in composition and timing." },
+              { id: 7, name: "Storytelling", desc: "Every project is approached as a narrative structure." },
+              { id: 8, name: "Integrity", desc: "Professional discipline and reliability in execution." },
+              { id: 9, name: "Innovation", desc: "Continuous refinement of visual and technical approach." },
+              { id: 10, name: "Human Focus", desc: "Emphasis on emotion, presence, and connection." }
+            ].map((value) => (
+              <div
+                key={value.id}
+                className="flex flex-col gap-3 p-6 rounded-2xl bg-zinc-50 dark:bg-zinc-950 border border-zinc-150/50 dark:border-zinc-900 shadow-sm"
+              >
+                <span className="text-xs font-mono text-yellow-500 dark:text-yellow-400 font-semibold">
+                  {String(value.id).padStart(2, '0')}
+                </span>
+                <h3 className="text-base font-semibold text-black dark:text-white leading-tight">
+                  {value.name}
+                </h3>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed font-light">
+                  {value.desc}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -173,7 +249,7 @@ export default function AboutPage() {
           {/* Top Half: Brand Identity vs Functional Links Layout Split */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 w-full">
             <div className="flex flex-col gap-4 md:col-span-4">
-              <div className="flex items-center gap-2 font-bold text-xl tracking-tight text-white">
+              <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight text-white cursor-pointer w-fit">
                 <Image
                   className="invert"
                   src="/IASLOGO.png"
@@ -182,7 +258,7 @@ export default function AboutPage() {
                   height={18}
                   priority
                 />
-              </div>
+              </Link>
               <p className="text-sm leading-6 font-light max-w-sm text-zinc-400">
                 Crafting intentional visual textures for narrative films, commercial campaigns, and global art installations.
               </p>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -15,7 +16,7 @@ export function Header() {
       <div className="flex h-14 items-center justify-between px-6 w-full">
 
         {/* Left Side: Logo */}
-        <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
+        <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight cursor-pointer">
           <Image
             className="dark:invert"
             src="/IASLOGO.png"
@@ -24,7 +25,7 @@ export function Header() {
             height={20}
             priority
           />
-        </div>
+        </Link>
 
         {/* Center: Navigation Menu */}
         <NavigationMenu>

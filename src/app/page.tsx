@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
 import { Header } from "@/components/shared/Header";
 
@@ -471,10 +472,10 @@ export default function Home() {
           {/* Left Side: Title and Description */}
           <div className="flex flex-col gap-6 flex-1 max-w-xl text-center sm:text-left items-center sm:items-start">
             <h2 className="text-4xl md:text-5xl lg:text-6xl text-black dark:text-zinc-50 font-handwriting-thin leading-none tracking-wide">
-              Why choose us?
+              Foundation
             </h2>
             <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-              We slice through standard perspectives, shattering conventions to reveal raw, crystalline stories. Each frame is meticulously crafted with optical depth, capturing light and shadow in their most organic states. We don't just capture motion; we expose the soul of the visual narrative.
+              IAS Studio exists at the intersection of observation and meaning. We do not merely capture images; we document presence, structure, emotion, and time as they naturally unfold. Our work is guided by a deeper question: what remains when the moment has passed? We believe photography and visual storytelling are not acts of decoration, but acts of preservation. Each frame is treated as an archive of human experience, architecture, culture, and identity. IAS Studio is built on the principle that clarity is more powerful than excess, and intention is more valuable than volume.
             </p>
           </div>
 
@@ -510,7 +511,7 @@ export default function Home() {
 
             {/* Column 1: Studio Profile / Core Statement */}
             <div className="flex flex-col gap-4 md:col-span-4">
-              <div className="flex items-center gap-2 font-bold text-xl tracking-tight text-white">
+              <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight text-white cursor-pointer w-fit">
                 <Image
                   className="invert"
                   src="/IASLOGO.png"
@@ -519,7 +520,7 @@ export default function Home() {
                   height={18}
                   priority
                 />
-              </div>
+              </Link>
               <p className="text-sm leading-6 font-light max-w-sm text-zinc-400">
                 Crafting intentional visual textures for narrative films, commercial campaigns, and global art installations.
               </p>

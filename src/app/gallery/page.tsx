@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Header } from "@/components/shared/Header";
 
 interface GalleryItem {
   id: number;
   src: string;
   title: string;
-  category: "Narrative" | "Commercial" | "Music Video";
+  category: string;
   lens: string;
   aperture: string;
   iso: string;
@@ -16,34 +17,46 @@ interface GalleryItem {
   aspect: string;
 }
 
+const categoryDescriptions: Record<string, string> = {
+  "Architectural Perspectives": "We document built environments as expressions of structure, intention, and permanence.",
+  "Wedding Chronicles": "We preserve unions as living narratives of emotion, family, and legacy.",
+  "Cultural Heritage": "We capture traditions as memory in motion across generations.",
+  "Corporate & Institutional Events": "We document leadership, dialogue, and organized vision.",
+  "Leaders of Tomorrow": "We portray youth as the foundation of becoming and future identity.",
+  "Her Grace": "A refined portrait study of elegance, presence, and individuality.",
+  "His Excellence": "A portrait exploration of character, confidence, and refined identity.",
+  "Celebrations & Milestones": "We preserve transitions and achievements as lasting memory.",
+  "Family Legacy": "We document unity, connection, and generational continuity.",
+};
+
 const galleryData: GalleryItem[] = [
   {
     id: 1,
     src: "/IAS_1603.jpg",
-    title: "Shadows of Today",
-    category: "Narrative",
-    lens: "50mm T2.1 Anamorphic",
-    aperture: "T2.1",
-    iso: "800",
+    title: "Built Environments",
+    category: "Architectural Perspectives",
+    lens: "35mm T1.5 Prime",
+    aperture: "T2.8",
+    iso: "400",
     year: "2026",
     aspect: "aspect-[3/4]",
   },
   {
     id: 2,
     src: "/IAS_4484.jpg",
-    title: "Golden Hour Test",
-    category: "Commercial",
-    lens: "35mm T1.5 Prime",
-    aperture: "T2.0",
-    iso: "400",
+    title: "Preserving Unions",
+    category: "Wedding Chronicles",
+    lens: "50mm T2.1 Anamorphic",
+    aperture: "T2.1",
+    iso: "800",
     year: "2025",
     aspect: "aspect-video",
   },
   {
     id: 3,
     src: "/IAS_3900 (2).jpg",
-    title: "Echoes in the Dark",
-    category: "Music Video",
+    title: "Memory in Motion",
+    category: "Cultural Heritage",
     lens: "85mm T1.4 Prime",
     aperture: "T1.4",
     iso: "1600",
@@ -53,33 +66,66 @@ const galleryData: GalleryItem[] = [
   {
     id: 4,
     src: "/IAS_1603.jpg",
-    title: "The Last Frame",
-    category: "Narrative",
-    lens: "75mm T2.0 Anamorphic",
-    aperture: "T2.8",
-    iso: "3200",
-    year: "2025",
+    title: "Leadership & Dialogue",
+    category: "Corporate & Institutional Events",
+    lens: "24mm T1.5 Prime",
+    aperture: "T2.0",
+    iso: "200",
+    year: "2026",
     aspect: "aspect-[3/4]",
   },
   {
     id: 5,
     src: "/IAS_4484.jpg",
-    title: "Neon Low-Light",
-    category: "Music Video",
+    title: "Foundation of Becoming",
+    category: "Leaders of Tomorrow",
     lens: "50mm T2.1 Anamorphic",
     aperture: "T2.1",
     iso: "3200",
-    year: "2026",
+    year: "2025",
     aspect: "aspect-video",
   },
   {
     id: 6,
     src: "/IAS_3900 (2).jpg",
-    title: "Chasing Horizons",
-    category: "Commercial",
-    lens: "24mm T1.5 Prime",
-    aperture: "T1.5",
-    iso: "200",
+    title: "Elegance & Individuality",
+    category: "Her Grace",
+    lens: "75mm T2.0 Anamorphic",
+    aperture: "T2.0",
+    iso: "800",
+    year: "2026",
+    aspect: "aspect-[4/3]",
+  },
+  {
+    id: 7,
+    src: "/IAS_1603.jpg",
+    title: "Character & Confidence",
+    category: "His Excellence",
+    lens: "85mm T1.4 Prime",
+    aperture: "T1.4",
+    iso: "400",
+    year: "2025",
+    aspect: "aspect-[3/4]",
+  },
+  {
+    id: 8,
+    src: "/IAS_4484.jpg",
+    title: "Transitions & Achievements",
+    category: "Celebrations & Milestones",
+    lens: "35mm T1.5 Prime",
+    aperture: "T2.0",
+    iso: "1600",
+    year: "2026",
+    aspect: "aspect-video",
+  },
+  {
+    id: 9,
+    src: "/IAS_3900 (2).jpg",
+    title: "Unity & Connection",
+    category: "Family Legacy",
+    lens: "50mm T2.1 Anamorphic",
+    aperture: "T2.1",
+    iso: "800",
     year: "2025",
     aspect: "aspect-[4/3]",
   },
@@ -89,7 +135,7 @@ export default function GalleryPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3;
+  const itemsPerPage = 6;
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
@@ -129,11 +175,22 @@ export default function GalleryPage() {
 
         {/* Filter Categories */}
         <div className="flex gap-4 border-b border-zinc-100 dark:border-zinc-900 pb-4 overflow-x-auto scrollbar-none">
-          {["All", "Narrative", "Commercial", "Music Video"].map((category) => (
+          {[
+            "All",
+            "Architectural Perspectives",
+            "Wedding Chronicles",
+            "Cultural Heritage",
+            "Corporate & Institutional Events",
+            "Leaders of Tomorrow",
+            "Her Grace",
+            "His Excellence",
+            "Celebrations & Milestones",
+            "Family Legacy",
+          ].map((category) => (
             <button
               key={category}
               onClick={() => handleCategoryChange(category)}
-              className={`text-sm font-medium transition-colors pb-2 px-1 relative outline-none ${
+              className={`text-sm font-medium transition-colors pb-2 px-1 whitespace-nowrap relative outline-none ${
                 selectedCategory === category
                   ? "text-black dark:text-white"
                   : "text-zinc-400 dark:text-zinc-600 hover:text-black dark:hover:text-white"
@@ -163,7 +220,7 @@ export default function GalleryPage() {
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
               {/* Refraction / Film grain overlay effect */}
-              <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6" />
+              <div className="absolute inset-0 bg-black/70 backdrop-blur-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6" />
               
               <div className="absolute inset-0 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0 pointer-events-none z-10">
                 <span className="text-[10px] font-mono uppercase tracking-widest text-yellow-400">
@@ -172,6 +229,9 @@ export default function GalleryPage() {
                 <h3 className="text-lg font-medium text-white mt-1 leading-tight">
                   {item.title}
                 </h3>
+                <p className="text-xs text-zinc-350 mt-2 leading-relaxed font-light font-sans line-clamp-3">
+                  {categoryDescriptions[item.category]}
+                </p>
                 
                 {/* Tech Specs Block */}
                 <div className="border-t border-white/20 mt-4 pt-3 flex flex-col gap-1 text-[11px] font-light text-zinc-300 font-mono">
@@ -258,7 +318,10 @@ export default function GalleryPage() {
                 {lightboxItem.category} • {lightboxItem.year}
               </span>
               <h2 className="text-xl font-semibold">{lightboxItem.title}</h2>
-              <div className="flex flex-wrap gap-x-8 gap-y-2 mt-2 text-xs font-mono text-zinc-400">
+              <p className="text-xs text-zinc-350 max-w-xl leading-relaxed font-light mt-1 font-sans">
+                {categoryDescriptions[lightboxItem.category]}
+              </p>
+              <div className="flex flex-wrap gap-x-8 gap-y-2 mt-3 text-xs font-mono text-zinc-400">
                 <div>LENS: <span className="text-white">{lightboxItem.lens}</span></div>
                 <div>APERTURE: <span className="text-white">{lightboxItem.aperture}</span></div>
                 <div>ISO: <span className="text-white">{lightboxItem.iso}</span></div>
@@ -286,7 +349,7 @@ export default function GalleryPage() {
           {/* Top Half: Brand Identity vs Functional Links Layout Split */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 w-full">
             <div className="flex flex-col gap-4 md:col-span-4">
-              <div className="flex items-center gap-2 font-bold text-xl tracking-tight text-white">
+              <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight text-white cursor-pointer w-fit">
                 <Image
                   className="invert"
                   src="/IASLOGO.png"
@@ -295,7 +358,7 @@ export default function GalleryPage() {
                   height={18}
                   priority
                 />
-              </div>
+              </Link>
               <p className="text-sm leading-6 font-light max-w-sm text-zinc-400">
                 Crafting intentional visual textures for narrative films, commercial campaigns, and global art installations.
               </p>
