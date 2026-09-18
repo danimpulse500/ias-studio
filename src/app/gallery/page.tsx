@@ -1,438 +1,461 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/shared/Header";
-
-interface GalleryItem {
-  id: number;
-  src: string;
-  title: string;
-  category: string;
-  lens: string;
-  aperture: string;
-  iso: string;
-  year: string;
-  aspect: string;
-}
-
-const categoryDescriptions: Record<string, string> = {
-  "Architectural Perspectives": "We document built environments as expressions of structure, intention, and permanence.",
-  "Wedding Chronicles": "We preserve unions as living narratives of emotion, family, and legacy.",
-  "Cultural Heritage": "We capture traditions as memory in motion across generations.",
-  "Corporate & Institutional Events": "We document leadership, dialogue, and organized vision.",
-  "Leaders of Tomorrow": "We portray youth as the foundation of becoming and future identity.",
-  "Her Grace": "A refined portrait study of elegance, presence, and individuality.",
-  "His Excellence": "A portrait exploration of character, confidence, and refined identity.",
-  "Celebrations & Milestones": "We preserve transitions and achievements as lasting memory.",
-  "Family Legacy": "We document unity, connection, and generational continuity.",
-};
-
-const galleryData: GalleryItem[] = [
-  {
-    id: 1,
-    src: "/IAS_1603.jpg",
-    title: "Built Environments",
-    category: "Architectural Perspectives",
-    lens: "35mm T1.5 Prime",
-    aperture: "T2.8",
-    iso: "400",
-    year: "2026",
-    aspect: "aspect-[3/4]",
-  },
-  {
-    id: 2,
-    src: "/IAS_4484.jpg",
-    title: "Preserving Unions",
-    category: "Wedding Chronicles",
-    lens: "50mm T2.1 Anamorphic",
-    aperture: "T2.1",
-    iso: "800",
-    year: "2025",
-    aspect: "aspect-video",
-  },
-  {
-    id: 3,
-    src: "/IAS_3900 (2).jpg",
-    title: "Memory in Motion",
-    category: "Cultural Heritage",
-    lens: "85mm T1.4 Prime",
-    aperture: "T1.4",
-    iso: "1600",
-    year: "2026",
-    aspect: "aspect-[4/3]",
-  },
-  {
-    id: 4,
-    src: "/IAS_1603.jpg",
-    title: "Leadership & Dialogue",
-    category: "Corporate & Institutional Events",
-    lens: "24mm T1.5 Prime",
-    aperture: "T2.0",
-    iso: "200",
-    year: "2026",
-    aspect: "aspect-[3/4]",
-  },
-  {
-    id: 5,
-    src: "/IAS_4484.jpg",
-    title: "Foundation of Becoming",
-    category: "Leaders of Tomorrow",
-    lens: "50mm T2.1 Anamorphic",
-    aperture: "T2.1",
-    iso: "3200",
-    year: "2025",
-    aspect: "aspect-video",
-  },
-  {
-    id: 6,
-    src: "/IAS_3900 (2).jpg",
-    title: "Elegance & Individuality",
-    category: "Her Grace",
-    lens: "75mm T2.0 Anamorphic",
-    aperture: "T2.0",
-    iso: "800",
-    year: "2026",
-    aspect: "aspect-[4/3]",
-  },
-  {
-    id: 7,
-    src: "/IAS_1603.jpg",
-    title: "Character & Confidence",
-    category: "His Excellence",
-    lens: "85mm T1.4 Prime",
-    aperture: "T1.4",
-    iso: "400",
-    year: "2025",
-    aspect: "aspect-[3/4]",
-  },
-  {
-    id: 8,
-    src: "/IAS_4484.jpg",
-    title: "Transitions & Achievements",
-    category: "Celebrations & Milestones",
-    lens: "35mm T1.5 Prime",
-    aperture: "T2.0",
-    iso: "1600",
-    year: "2026",
-    aspect: "aspect-video",
-  },
-  {
-    id: 9,
-    src: "/IAS_3900 (2).jpg",
-    title: "Unity & Connection",
-    category: "Family Legacy",
-    lens: "50mm T2.1 Anamorphic",
-    aperture: "T2.1",
-    iso: "800",
-    year: "2025",
-    aspect: "aspect-[4/3]",
-  },
-];
+import {
+  portfolioItems,
+  PORTFOLIO_CATEGORIES,
+  PortfolioCategory,
+  PortfolioItem,
+} from "@/data/portfolio";
+import {
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Lock,
+  ArrowUpRight,
+  LayoutGrid,
+  Film,
+  KeyRound,
+  CheckCircle2,
+} from "lucide-react";
 
 export default function GalleryPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const [selectedCategory, setSelectedCategory] = useState<PortfolioCategory>("All");
+  const [layoutMode, setLayoutMode] = useState<"grid" | "cinema">("grid");
+  const [activeItem, setActiveItem] = useState<PortfolioItem | null>(null);
+  const [showVaultModal, setShowVaultModal] = useState(false);
+  const [vaultKey, setVaultKey] = useState("");
+  const [vaultMessage, setVaultMessage] = useState<string | null>(null);
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setCurrentPage(1);
-  };
-
-  const filteredItems = galleryData.filter(
+  const filteredItems = portfolioItems.filter(
     (item) => selectedCategory === "All" || item.category === selectedCategory
   );
 
-  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedItems = filteredItems.slice(startIndex, startIndex + itemsPerPage);
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (!activeItem) return;
+      const currentIndex = filteredItems.findIndex((i) => i.id === activeItem.id);
+
+      if (e.key === "Escape") {
+        setActiveItem(null);
+      } else if (e.key === "ArrowRight") {
+        const nextIndex = (currentIndex + 1) % filteredItems.length;
+        setActiveItem(filteredItems[nextIndex]);
+      } else if (e.key === "ArrowLeft") {
+        const prevIndex = (currentIndex - 1 + filteredItems.length) % filteredItems.length;
+        setActiveItem(filteredItems[prevIndex]);
+      }
+    },
+    [activeItem, filteredItems]
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
+
+  const handleVaultAccess = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!vaultKey.trim()) return;
+    setVaultMessage(`Authenticating secure key '${vaultKey}'... Vault connected!`);
+    setTimeout(() => {
+      setVaultMessage(null);
+      setShowVaultModal(false);
+      setVaultKey("");
+    }, 2500);
+  };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-white font-sans dark:bg-black transition-colors duration-300">
-      <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=UnifrakturMaguntia&family=Special+Elite&family=Orbitron:wght@800&family=Caveat:wght@700&family=Reenie+Beanie&display=swap');
-
-        .font-handwriting-thin {
-          font-family: 'Reenie Beanie', cursive;
-        }
-      `}</style>
-
+    <div className="min-h-screen w-full flex flex-col font-sans transition-colors duration-300">
       <Header />
 
-      <main className="flex-1 w-full max-w-7xl mx-auto py-24 px-16 flex flex-col gap-12">
-        {/* Intro Section */}
-        <div className="flex flex-col gap-6 max-w-xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl text-black dark:text-zinc-50 font-handwriting-thin leading-none tracking-wide">
-            The Exhibition
-          </h1>
-          <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            A visual repository of frames, lenses, and light textures captured on recent sets. Filter by production category to explore focal profiles.
-          </p>
-        </div>
+      <main className="w-full max-w-7xl mx-auto px-6 sm:px-12 lg:px-20 py-16 flex-1 flex flex-col gap-12">
+        {/* Editorial Page Header */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 border-b border-black/[0.08] dark:border-white/[0.1] pb-10">
+          <div className="flex flex-col gap-3 max-w-2xl">
+            <span className="text-xs font-mono tracking-[0.25em] uppercase text-amber-700 dark:text-amber-400 font-semibold">
+              Portfolio Folio • 2024–2026 Archive
+            </span>
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-normal text-zinc-950 dark:text-white leading-tight">
+              Selected Works
+            </h1>
+            <p className="text-base text-zinc-700 dark:text-zinc-300 font-light leading-relaxed">
+              A curated anthology of architectural studies, luxury wedding films, and intimate fine art portraits. Documented with medium format optics and intentional daylight.
+            </p>
+          </div>
 
-        {/* Filter Categories */}
-        <div className="flex gap-4 border-b border-zinc-100 dark:border-zinc-900 pb-4 overflow-x-auto scrollbar-none">
-          {[
-            "All",
-            "Architectural Perspectives",
-            "Wedding Chronicles",
-            "Cultural Heritage",
-            "Corporate & Institutional Events",
-            "Leaders of Tomorrow",
-            "Her Grace",
-            "His Excellence",
-            "Celebrations & Milestones",
-            "Family Legacy",
-          ].map((category) => (
+          {/* Client Vault Access Card */}
+          <div className="glass-panel-glow p-5 sm:p-6 rounded-3xl border border-black/[0.08] dark:border-white/[0.15] flex flex-col gap-3 min-w-[280px]">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-mono uppercase tracking-widest text-amber-700 dark:text-amber-400 flex items-center gap-1.5 font-semibold">
+                <Lock className="w-3.5 h-3.5" />
+                Private Archive
+              </span>
+              <span className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400">Client Access</span>
+            </div>
+            <p className="text-xs text-zinc-600 dark:text-zinc-300 font-light leading-relaxed">
+              Clients may enter their encrypted passkey to view, download, and order archival prints.
+            </p>
             <button
-              key={category}
-              onClick={() => handleCategoryChange(category)}
-              className={`text-sm font-medium transition-colors pb-2 px-1 whitespace-nowrap relative outline-none ${
-                selectedCategory === category
-                  ? "text-black dark:text-white"
-                  : "text-zinc-400 dark:text-zinc-600 hover:text-black dark:hover:text-white"
-              }`}
+              onClick={() => setShowVaultModal(true)}
+              className="inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl bg-black/[0.05] dark:bg-white/[0.08] hover:bg-black dark:hover:bg-white text-zinc-900 dark:text-white hover:text-white dark:hover:text-black text-xs font-medium tracking-wide transition-all border border-black/10 dark:border-white/20"
             >
-              {category}
-              {selectedCategory === category && (
-                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-yellow-500 dark:bg-yellow-400 rounded-full" />
-              )}
+              <span>Enter Vault Passkey</span>
+              <KeyRound className="w-3.5 h-3.5" />
             </button>
-          ))}
+          </div>
         </div>
 
-        {/* Masonry-Style Grid Layout */}
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full min-h-[350px]">
-          {paginatedItems.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => setLightboxItem(item)}
-              className={`break-inside-avoid relative w-full overflow-hidden rounded-2xl cursor-pointer group bg-zinc-100 dark:bg-zinc-900 shadow-sm border border-zinc-200/10 ${item.aspect}`}
-            >
-              <Image
-                src={item.src}
-                alt={item.title}
-                fill
-                sizes="(max-w-640px) 100vw, (max-w-1024px) 50vw, 33vw"
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              />
-              {/* Refraction / Film grain overlay effect */}
-              <div className="absolute inset-0 bg-black/70 backdrop-blur-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6" />
-              
-              <div className="absolute inset-0 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0 pointer-events-none z-10">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-yellow-400">
-                  {item.category}
-                </span>
-                <h3 className="text-lg font-medium text-white mt-1 leading-tight">
-                  {item.title}
-                </h3>
-                <p className="text-xs text-zinc-350 mt-2 leading-relaxed font-light font-sans line-clamp-3">
-                  {categoryDescriptions[item.category]}
-                </p>
-                
-                {/* Tech Specs Block */}
-                <div className="border-t border-white/20 mt-4 pt-3 flex flex-col gap-1 text-[11px] font-light text-zinc-300 font-mono">
-                  <div className="flex justify-between">
-                    <span>LENS:</span>
-                    <span>{item.lens}</span>
+        {/* Filter Controls & Layout Mode Toggles */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-2 border-b border-black/[0.06] dark:border-white/[0.08]">
+          {/* Category Tabs */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+            {PORTFOLIO_CATEGORIES.map((category) => {
+              const isSelected = selectedCategory === category;
+              const count =
+                category === "All"
+                  ? portfolioItems.length
+                  : portfolioItems.filter((i) => i.category === category).length;
+
+              return (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-4 py-2 rounded-full text-xs uppercase tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 ${
+                    isSelected
+                      ? "bg-[#121214] text-white dark:bg-white dark:text-black font-semibold shadow-sm"
+                      : "text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.06]"
+                  }`}
+                >
+                  <span>{category}</span>
+                  <span
+                    className={`text-[10px] font-mono ${
+                      isSelected ? "text-amber-300 dark:text-zinc-600" : "text-amber-700 dark:text-amber-400 font-semibold"
+                    }`}
+                  >
+                    ({count})
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* View Switcher */}
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400 mr-1 hidden sm:inline">Ratio:</span>
+            <div className="flex items-center p-1 rounded-full bg-black/[0.04] dark:bg-white/[0.05] border border-black/[0.08] dark:border-white/[0.1]">
+              <button
+                onClick={() => setLayoutMode("grid")}
+                className={`p-2 rounded-full transition-colors flex items-center gap-1.5 text-xs ${
+                  layoutMode === "grid"
+                    ? "bg-white text-black dark:bg-white dark:text-black font-semibold shadow-sm"
+                    : "text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white"
+                }`}
+                title="Editorial Grid View"
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span className="hidden md:inline text-[11px]">Editorial</span>
+              </button>
+              <button
+                onClick={() => setLayoutMode("cinema")}
+                className={`p-2 rounded-full transition-colors flex items-center gap-1.5 text-xs ${
+                  layoutMode === "cinema"
+                    ? "bg-white text-black dark:bg-white dark:text-black font-semibold shadow-sm"
+                    : "text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white"
+                }`}
+                title="Anamorphic Cinema Strip View"
+              >
+                <Film className="w-3.5 h-3.5" />
+                <span className="hidden md:inline text-[11px]">Cinema Scope</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Gallery Visual Display */}
+        {layoutMode === "grid" ? (
+          /* Editorial Asymmetric Grid */
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredItems.map((item, index) => {
+              const isWide = item.aspectRatio === "cinema" && (index % 3 === 0 || index % 5 === 0);
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => setActiveItem(item)}
+                  className={`group cursor-pointer flex flex-col gap-4 ${
+                    isWide ? "sm:col-span-2" : ""
+                  }`}
+                >
+                  <div
+                    className={`relative w-full overflow-hidden rounded-3xl bg-zinc-200 dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.12] transition-all duration-500 group-hover:border-amber-500/60 dark:group-hover:border-amber-400/60 shadow-sm group-hover:shadow-2xl ${
+                      isWide ? "aspect-[21/9]" : item.aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-[16/10]"
+                    }`}
+                  >
+                    <Image
+                      src={item.src}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+
+                    {/* Top Category Badge */}
+                    <div className="absolute top-4 left-4 flex items-center gap-2">
+                      <span className="px-3 py-1 rounded-full bg-black/70 backdrop-blur-md text-[10px] font-mono tracking-widest uppercase text-amber-300 border border-white/15">
+                        {item.category}
+                      </span>
+                    </div>
+
+                    {/* Technical Overlay */}
+                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-mono text-zinc-300">
+                      <span className="bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10">
+                        {item.location}
+                      </span>
+                      <span className="bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10 text-amber-300">
+                        {item.year}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span>APERTURE:</span>
-                    <span>{item.aperture}</span>
+
+                  {/* Title & EXIF summary */}
+                  <div className="flex flex-col gap-1 px-1">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xl font-serif text-zinc-950 dark:text-white group-hover:text-amber-700 dark:group-hover:text-amber-200 transition-colors">
+                        {item.title}
+                      </h3>
+                      <ArrowUpRight className="w-4 h-4 text-zinc-400 group-hover:text-amber-600 dark:group-hover:text-amber-300 transition-colors" />
+                    </div>
+                    <p className="text-xs text-zinc-600 dark:text-zinc-300 font-light line-clamp-2">
+                      {item.story}
+                    </p>
+                    {item.lens && (
+                      <span className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400 mt-1">
+                        Optics: {item.lens}
+                      </span>
+                    )}
                   </div>
-                  <div className="flex justify-between">
-                    <span>ISO:</span>
-                    <span>{item.iso}</span>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          /* Cinema Strip View (Wide Anamorphic Plates) */
+          <div className="flex flex-col gap-12">
+            {filteredItems.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => setActiveItem(item)}
+                className="group cursor-pointer flex flex-col gap-4"
+              >
+                <div className="relative aspect-[21/9] w-full overflow-hidden rounded-3xl bg-zinc-200 dark:bg-zinc-900 border border-black/[0.08] dark:border-white/[0.14] group-hover:border-amber-500/60 dark:group-hover:border-amber-400/60 transition-all duration-500 shadow-sm group-hover:shadow-2xl">
+                  <Image
+                    src={item.src}
+                    alt={item.title}
+                    fill
+                    sizes="100vw"
+                    className="object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.03]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
+                  
+                  <div className="absolute top-6 left-6">
+                    <span className="px-3.5 py-1.5 rounded-full bg-black/75 backdrop-blur-md text-xs font-mono tracking-widest uppercase text-amber-300 border border-white/20">
+                      {item.category} • {item.location}
+                    </span>
+                  </div>
+
+                  <div className="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                    <div className="flex flex-col gap-1 max-w-2xl">
+                      <span className="text-xs font-mono text-zinc-300 uppercase tracking-widest">
+                        {item.camera || "Cinema Prime"} • {item.filmStock || "35mm Raw"}
+                      </span>
+                      <h3 className="text-2xl sm:text-3xl font-serif text-white group-hover:text-amber-200 transition-colors">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-zinc-200 font-light max-w-xl">
+                        {item.story}
+                      </p>
+                    </div>
+                    <div className="px-4 py-2 rounded-full bg-white text-black text-xs font-semibold uppercase tracking-wider group-hover:bg-amber-300 transition-colors shrink-0">
+                      Inspect Frame
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Pagination Controls */}
-        {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-4 mt-8 pt-8 border-t border-zinc-100 dark:border-zinc-900">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className="text-xs font-mono uppercase tracking-wider px-4 py-2 rounded-full border border-zinc-200 dark:border-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors text-black dark:text-white"
-            >
-              Prev
-            </button>
-            <div className="flex gap-2">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-mono ${
-                    currentPage === page
-                      ? "bg-black text-white dark:bg-white dark:text-black font-bold"
-                      : "text-zinc-400 hover:text-black dark:hover:text-white"
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-              className="text-xs font-mono uppercase tracking-wider px-4 py-2 rounded-full border border-zinc-200 dark:border-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors text-black dark:text-white"
-            >
-              Next
-            </button>
+            ))}
           </div>
         )}
       </main>
 
-      {/* Lightbox Modal */}
-      {lightboxItem && (
+      {/* --- HIGH-END DARKROOM LIGHTBOX MODAL --- */}
+      {activeItem && (
         <div
-          className="fixed inset-0 bg-black/95 z-[999] flex flex-col justify-center items-center p-4 backdrop-blur-md"
-          onClick={() => setLightboxItem(null)}
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-8 animate-in fade-in duration-200 select-none"
+          onClick={() => setActiveItem(null)}
         >
+          {/* Lightbox Top Header */}
           <div
-            className="relative w-full max-w-4xl aspect-video rounded-xl overflow-hidden shadow-2xl"
+            className="w-full max-w-6xl mx-auto flex items-center justify-between border-b border-white/[0.12] pb-4 text-xs font-mono"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-amber-400 uppercase tracking-widest">{activeItem.category}</span>
+              <span className="text-zinc-500">•</span>
+              <span className="text-white font-serif text-base">{activeItem.title}</span>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <span className="text-zinc-400 hidden sm:inline">{activeItem.location} ({activeItem.year})</span>
+              <button
+                onClick={() => setActiveItem(null)}
+                className="p-2 rounded-full bg-white/[0.08] hover:bg-white text-white hover:text-black transition-colors"
+                aria-label="Close Lightbox"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Centered Image with Lateral Arrows */}
+          <div
+            className="relative w-full max-w-5xl mx-auto my-auto h-[62vh] flex items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
             <Image
-              src={lightboxItem.src}
-              alt={lightboxItem.title}
+              src={activeItem.src}
+              alt={activeItem.title}
               fill
-              className="object-cover"
+              priority
+              sizes="100vw"
+              className="object-contain"
             />
-            {/* Close Button */}
+
+            {/* Previous Frame Button */}
             <button
-              onClick={() => setLightboxItem(null)}
-              className="absolute top-4 right-4 bg-black/60 hover:bg-black text-white p-2 rounded-full border border-white/20 transition-colors"
+              onClick={() => {
+                const idx = filteredItems.findIndex((i) => i.id === activeItem.id);
+                const prev = (idx - 1 + filteredItems.length) % filteredItems.length;
+                setActiveItem(filteredItems[prev]);
+              }}
+              className="absolute left-2 sm:-left-12 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/80 border border-white/20 text-white hover:bg-amber-400 hover:text-black transition-all hover:scale-110"
+              aria-label="Previous Frame"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              <ChevronLeft className="w-5 h-5" />
             </button>
-            {/* Info Drawer overlay */}
-            <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/90 to-transparent p-6 text-white flex flex-col gap-2">
-              <span className="text-xs font-mono uppercase tracking-widest text-yellow-400">
-                {lightboxItem.category} • {lightboxItem.year}
-              </span>
-              <h2 className="text-xl font-semibold">{lightboxItem.title}</h2>
-              <p className="text-xs text-zinc-350 max-w-xl leading-relaxed font-light mt-1 font-sans">
-                {categoryDescriptions[lightboxItem.category]}
-              </p>
-              <div className="flex flex-wrap gap-x-8 gap-y-2 mt-3 text-xs font-mono text-zinc-400">
-                <div>LENS: <span className="text-white">{lightboxItem.lens}</span></div>
-                <div>APERTURE: <span className="text-white">{lightboxItem.aperture}</span></div>
-                <div>ISO: <span className="text-white">{lightboxItem.iso}</span></div>
-              </div>
+
+            {/* Next Frame Button */}
+            <button
+              onClick={() => {
+                const idx = filteredItems.findIndex((i) => i.id === activeItem.id);
+                const next = (idx + 1) % filteredItems.length;
+                setActiveItem(filteredItems[next]);
+              }}
+              className="absolute right-2 sm:-right-12 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/80 border border-white/20 text-white hover:bg-amber-400 hover:text-black transition-all hover:scale-110"
+              aria-label="Next Frame"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Lightbox Bottom Details Bar */}
+          <div
+            className="w-full max-w-6xl mx-auto border-t border-white/[0.12] pt-4 grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div>
+              <span className="text-[10px] font-mono text-amber-400 uppercase tracking-widest block mb-0.5">Narrative</span>
+              <p className="text-zinc-300 font-light line-clamp-2">{activeItem.story}</p>
+            </div>
+            <div>
+              <span className="text-[10px] font-mono text-amber-400 uppercase tracking-widest block mb-0.5">Camera Body</span>
+              <span className="text-white font-mono">{activeItem.camera || "Arri Alexa Mini LF"}</span>
+            </div>
+            <div>
+              <span className="text-[10px] font-mono text-amber-400 uppercase tracking-widest block mb-0.5">Optical System</span>
+              <span className="text-white font-mono">{activeItem.lens || "Cooke Anamorphic /i Prime"}</span>
+            </div>
+            <div>
+              <span className="text-[10px] font-mono text-amber-400 uppercase tracking-widest block mb-0.5">Film Stock / Format</span>
+              <span className="text-white font-mono">{activeItem.filmStock || "Kodak 500T 35mm"}</span>
             </div>
           </div>
         </div>
       )}
 
-      {/* --- CINEMATIC FOOTER SECTION --- */}
-      <footer className="relative w-full bg-black text-zinc-400 border-t border-zinc-900 overflow-hidden transition-colors duration-300">
-        {/* Background Yellow Unconnected Square Grid */}
-        <div className="absolute inset-0 pointer-events-none opacity-20 z-0">
-          <svg className="w-full h-full">
-            <defs>
-              <pattern id="squareGrid" width="28" height="28" patternUnits="userSpaceOnUse">
-                <rect x="0" y="0" width="2" height="2" fill="#eab308" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#squareGrid)" />
-          </svg>
-        </div>
+      {/* --- CLIENT VAULT SECURITY MODAL --- */}
+      {showVaultModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 dark:bg-black/90 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200"
+          onClick={() => setShowVaultModal(false)}
+        >
+          <div
+            className="glass-panel-glow p-8 rounded-3xl border border-black/10 dark:border-white/20 max-w-md w-full flex flex-col gap-6 shadow-2xl relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowVaultModal(false)}
+              className="absolute top-6 right-6 text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
 
-        <div className="relative w-full mx-auto max-w-7xl py-16 px-16 flex flex-col gap-16 z-10">
-          {/* Top Half: Brand Identity vs Functional Links Layout Split */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 w-full">
-            <div className="flex flex-col gap-4 md:col-span-4">
-              <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight text-white cursor-pointer w-fit">
-                <Image
-                  className="invert"
-                  src="/IASLOGO.png"
-                  alt="Next.js logo"
-                  width={90}
-                  height={18}
-                  priority
-                />
-              </Link>
-              <p className="text-sm leading-6 font-light max-w-sm text-zinc-400">
-                Crafting intentional visual textures for narrative films, commercial campaigns, and global art installations.
+            <div className="flex flex-col gap-2">
+              <div className="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-300 flex items-center justify-center mb-1">
+                <Lock className="w-5 h-5" />
+              </div>
+              <span className="text-xs font-mono uppercase tracking-[0.2em] text-amber-700 dark:text-amber-400 font-semibold">
+                Encrypted Client Vault
+              </span>
+              <h3 className="text-2xl font-serif text-zinc-950 dark:text-white">Access Your Collection</h3>
+              <p className="text-xs text-zinc-600 dark:text-zinc-300 font-light leading-relaxed">
+                Enter the unique access code provided in your handover box to unlock your full-resolution portfolio, wedding film, and print lab.
               </p>
             </div>
 
-            <div className="flex flex-col gap-4 md:col-span-3 md:col-start-6">
-              <h4 className="text-xs font-mono uppercase tracking-widest text-zinc-200 font-medium">
-                Navigation
-              </h4>
-              <ul className="flex flex-col gap-3 text-sm font-light">
-                {["Gallery", "About Us", "Contact Us"].map((item) => (
-                  <li key={item}>
-                    <a
-                      href={`/${item.toLowerCase().replace(" ", "")}`}
-                      className="hover:text-yellow-400 transition-colors duration-200 text-zinc-400"
-                    >
-                      {item}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {vaultMessage ? (
+              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-400/30 flex items-center gap-3 text-xs text-amber-800 dark:text-amber-200 animate-in fade-in font-medium">
+                <CheckCircle2 className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
+                <span>{vaultMessage}</span>
+              </div>
+            ) : (
+              <form onSubmit={handleVaultAccess} className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[11px] font-mono text-zinc-700 dark:text-zinc-300 uppercase tracking-wider font-medium">
+                    Collection Key
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. IAS-TUSCANY-2025"
+                    value={vaultKey}
+                    onChange={(e) => setVaultKey(e.target.value)}
+                    className="w-full bg-black/[0.04] dark:bg-black/60 border border-black/10 dark:border-white/20 rounded-xl px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder:text-zinc-500 focus:outline-none focus:border-amber-500 transition-colors uppercase font-mono tracking-widest"
+                  />
+                </div>
 
-            <div className="flex flex-col gap-4 md:col-span-4">
-              <h4 className="text-xs font-mono uppercase tracking-widest text-zinc-200 font-medium">
-                Newsletter
-              </h4>
-              <p className="text-sm font-light leading-6 text-zinc-400">
-                Receive quarterly breakdowns of camera configurations and lighting plans.
-              </p>
-
-              <form
-                onSubmit={(e) => e.preventDefault()}
-                className="group relative flex w-full max-w-sm items-center border-b border-zinc-800 focus-within:border-yellow-400 transition-colors duration-300 pb-1"
-              >
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  required
-                  className="w-full bg-transparent text-sm font-light py-2 text-white placeholder-zinc-650 focus:outline-none"
-                />
                 <button
                   type="submit"
-                  aria-label="Subscribe"
-                  className="text-xs uppercase font-mono tracking-wider ml-2 text-yellow-500 hover:text-yellow-400 transition-colors"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 dark:from-amber-400 dark:via-amber-300 dark:to-yellow-200 text-black text-xs font-semibold uppercase tracking-wider hover:shadow-[0_4px_25px_rgba(234,179,8,0.4)] transition-all"
                 >
-                  Join
+                  Unlock Vault
                 </button>
               </form>
-            </div>
-          </div>
+            )}
 
-          {/* Bottom Half */}
-          <div className="w-full flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between border-t border-zinc-900 pt-8 text-xs font-light tracking-wide text-zinc-500">
-            <div>
-              <span>© {new Date().getFullYear()} Studio. All rights reserved. Built with precision.</span>
-            </div>
-
-            <div className="flex items-center gap-6">
-              {["Vimeo", "Instagram", "LinkedIn"].map((platform) => (
-                <a
-                  key={platform}
-                  href={`https://${platform.toLowerCase()}.com`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-yellow-400 transition-colors duration-200 text-zinc-400"
-                >
-                  {platform}
-                </a>
-              ))}
+            <div className="text-center pt-2 border-t border-black/10 dark:border-white/10">
+              <span className="text-xs text-zinc-500 dark:text-zinc-400 font-light">
+                Need key assistance?{" "}
+                <Link href="/contact" className="text-zinc-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-300 underline underline-offset-4">
+                  Contact Studio Concierge
+                </Link>
+              </span>
             </div>
           </div>
         </div>
-      </footer>
+      )}
     </div>
   );
 }
