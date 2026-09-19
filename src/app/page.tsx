@@ -2,605 +2,568 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState, useEffect } from "react";
+import { useState } from "react";
 import { Header } from "@/components/shared/Header";
+import { Footer } from "@/components/shared/Footer";
+import {
+  ArrowUpRight,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  MapPin,
+} from "lucide-react";
 
-interface HighlightItem {
-  images: string[];
-  title: string;
-  description: string;
-  fallbackColor: string;
-}
+export default function HomePage() {
+  // Hero Carousel State
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [heroFilter, setHeroFilter] = useState("Traditional Wedding");
 
-function HighlightCard({ highlight }: { highlight: HighlightItem }) {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-
-  useEffect(() => {
-    if (!isHovered) {
-      setActiveIndex(0);
-      return;
-    }
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % highlight.images.length);
-    }, 1200);
-    return () => clearInterval(interval);
-  }, [isHovered, highlight.images.length]);
-
-  return (
-    <div
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={`relative aspect-[3/4] w-full overflow-hidden rounded-2xl group ${highlight.fallbackColor} cursor-pointer`}
-    >
-      {highlight.images.map((imgSrc, idx) => (
-        <Image
-          key={imgSrc + "-" + idx}
-          src={imgSrc}
-          alt={highlight.title}
-          fill
-          sizes="(max-w-640px) 100vw, (max-w-1024px) 50vw, 33vw"
-          className={`object-cover transition-opacity duration-700 ease-in-out ${idx === activeIndex ? "opacity-100" : "opacity-0"
-            }`}
-          priority={idx === 0}
-        />
-      ))}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent pointer-events-none" />
-
-      {/* Nodes / Dots Capsule */}
-      <div className="absolute top-4 right-4 flex gap-1.5 z-10 px-2 py-1.5 rounded-full bg-white/70 dark:bg-black/70 backdrop-blur-sm shadow-sm items-center border border-white/20 dark:border-zinc-800/50">
-        {highlight.images.map((_, idx) => (
-          <div
-            key={idx}
-            className={`h-1.5 rounded-full transition-all duration-300 ${idx === activeIndex
-              ? "w-4 bg-black dark:bg-white"
-              : "w-1.5 bg-black/20 dark:bg-white/20"
-              }`}
-          />
-        ))}
-      </div>
-
-      <div className="absolute bottom-0 left-0 w-full p-6 flex flex-col gap-2 pointer-events-none">
-        <h3 className="text-lg font-semibold text-white tracking-wide leading-snug">
-          {highlight.title}
-        </h3>
-        <p className="text-xs text-zinc-300 font-normal leading-relaxed line-clamp-3">
-          {highlight.description}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function ShatteredGlassFrame() {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const shards = [
-    { points: "0,0 150,0 120,180 0,120", dx: -12, dy: -12, rot: -3 },
-    { points: "150,0 300,0 300,160 135,160", dx: 12, dy: -12, rot: 4 },
-    { points: "300,160 300,280 165,240 135,160", dx: 16, dy: 4, rot: 5 },
-    { points: "300,280 300,400 150,400 165,240", dx: 12, dy: 16, rot: 3 },
-    { points: "150,400 0,400 0,260 135,220", dx: -12, dy: 16, rot: -4 },
-    { points: "0,260 0,120 120,180 135,220", dx: -16, dy: -2, rot: -5 },
-    { points: "120,180 135,160 165,240 135,220", dx: 2, dy: 8, rot: -2 },
-  ];
-
-  return (
-    <div
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="relative w-full aspect-[3/4] cursor-pointer"
-    >
-      <svg
-        className="w-full h-full select-none overflow-visible filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.4)]"
-        viewBox="0 0 300 400"
-      >
-        <defs>
-          {shards.map((shard, idx) => (
-            <clipPath id={`shard-clip-${idx}`} key={idx}>
-              <polygon points={shard.points} />
-            </clipPath>
-          ))}
-        </defs>
-
-        {shards.map((shard, idx) => {
-          const transform = isHovered
-            ? `translate(${shard.dx}px, ${shard.dy}px) rotate(${shard.rot}deg)`
-            : "translate(0px, 0px) rotate(0deg)";
-
-          return (
-            <g
-              key={idx}
-              style={{
-                transform,
-                transformOrigin: "150px 200px",
-                transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
-              }}
-            >
-              <image
-                href="/IAS_1603.jpg"
-                width="300"
-                height="400"
-                preserveAspectRatio="xMidYMid slice"
-                clipPath={`url(#shard-clip-${idx})`}
-                opacity="0.85"
-              />
-              <polygon
-                points={shard.points}
-                fill="rgba(255, 255, 255, 0.03)"
-                stroke="rgba(255, 255, 255, 0.35)"
-                strokeWidth="1.5"
-                className="transition-colors duration-350"
-              />
-            </g>
-          );
-        })}
-      </svg>
-    </div>
-  );
-}
-
-export default function Home() {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [activeNode, setActiveNode] = useState(0);
-
-  const words = [
-    { text: "Light", fontClass: "font-light-theme" },
-    { text: "Shadow", fontClass: "font-shadow-theme" },
-    { text: "Frames", fontClass: "font-frames-theme" },
-    { text: "Motion", fontClass: "font-motion-theme" },
-    { text: "Soul", fontClass: "font-soul-theme" }
-  ];
-  const [wordIndex, setWordIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setWordIndex((prev) => (prev + 1) % words.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const heroImages = [
+  const heroSlides = [
     {
-      src: "/IAS_1603.jpg",
-      alt: "Top Frame",
-      fallbackColor: "bg-zinc-800 dark:bg-zinc-900",
-      gridClasses: "col-start-2 row-start-1 animate-puzzle-top",
+      id: "01",
+      title: "Cameroonian Traditional Wedding",
+      location: "Douala & Yaoundé, Cameroon",
+      image: "/traditional_wedding.jpg",
+      thumb: "/traditional_wedding.jpg",
     },
     {
-      src: "/IAS_1603.jpg",
-      alt: "Right Frame",
-      fallbackColor: "bg-zinc-600 dark:bg-zinc-700",
-      gridClasses: "col-start-3 row-start-2 animate-puzzle-right",
+      id: "02",
+      title: "Lake Como White Wedding",
+      location: "Lake Como, Italy",
+      image: "/white_wedding.jpg",
+      thumb: "/white_wedding.jpg",
     },
     {
-      src: "/IAS_3900 (2).jpg",
-      alt: "Bottom Frame",
-      fallbackColor: "bg-zinc-500 dark:bg-zinc-600",
-      gridClasses: "col-start-2 row-start-3 animate-puzzle-bottom",
+      id: "03",
+      title: "Morning at Mont Blanc",
+      location: "Mont Blanc, France",
+      image: "/landscape_mont_blanc.jpg",
+      thumb: "/landscape_mont_blanc.jpg",
     },
     {
-      src: "/IAS_4484.jpg",
-      alt: "Left Frame",
-      fallbackColor: "bg-zinc-700 dark:bg-zinc-800",
-      gridClasses: "col-start-1 row-start-2 animate-puzzle-left",
+      id: "04",
+      title: "Studio Portrait Session",
+      location: "Paris, France",
+      image: "/portrait_editorial.jpg",
+      thumb: "/portrait_editorial.jpg",
     },
   ];
 
-  const featuredProjects = [
-    {
-      src: "/IAS_1603.jpg",
-      title: "Shadows of Today",
-      category: "Narrative Short",
-      year: "2026",
-      fallbackColor: "bg-zinc-800",
-    },
-    {
-      src: "/IAS_4484.jpg",
-      title: "Chasing Horizons",
-      category: "Commercial / Brand Film",
-      year: "2025",
-      fallbackColor: "bg-zinc-700",
-    },
-    {
-      src: "/IAS_3900 (2).jpg",
-      title: "Echoes in the Dark",
-      category: "Music Video",
-      year: "2026",
-      fallbackColor: "bg-zinc-600",
-    },
-    {
-      src: "/IAS_1603.jpg",
-      title: "The Last Frame",
-      category: "Independent Feature",
-      year: "2025",
-      fallbackColor: "bg-zinc-500",
-    },
+  const heroFilters = [
+    "Traditional Wedding",
+    "White Wedding",
+    "Indoor",
+    "Outdoor",
   ];
 
-  const highlights = [
-    {
-      images: ["/IAS_4484.jpg", "/IAS_1603.jpg", "/IAS_3900 (2).jpg"],
-      title: "Golden Hour Anamorphic Test",
-      description: "Exploring compression and organic lens flares on the 50mm T2.1 prime setup.",
-      fallbackColor: "bg-zinc-800",
-    },
-    {
-      images: ["/IAS_3900 (2).jpg", "/IAS_4484.jpg", "/IAS_1603.jpg"],
-      title: "Neon Low-Light Textures",
-      description: "Pushing sensors to ISO 3200 to capture natural color reproduction in nighttime urban environments.",
-      fallbackColor: "bg-zinc-700",
-    },
-    {
-      images: ["/IAS_1603.jpg", "/IAS_3900 (2).jpg", "/IAS_4484.jpg"],
-      title: "High-Contrast Monochrome Set",
-      description: "Meticulous sculpting using sharp backlighting and deep silhouette tracking arrays.",
-      fallbackColor: "bg-zinc-600",
-    },
-    {
-      images: ["/IAS_4484.jpg", "/IAS_1603.jpg", "/IAS_3900 (2).jpg"],
-      title: "Dynamic Vehicle Tracking",
-      description: "Utilizing stabilized remote heads to maintain continuous intimate focal geometry at high velocity.",
-      fallbackColor: "bg-zinc-500",
-    },
-  ];
+  // Section [02] Services State
+  const [selectedExpertise, setSelectedExpertise] = useState("Traditional Wedding");
 
-  const handleScroll = () => {
-    if (!scrollContainerRef.current) return;
-    const { scrollLeft, clientWidth } = scrollContainerRef.current;
-    const index = Math.round(scrollLeft / clientWidth);
-    setActiveNode(index);
+  const expertiseData: Record<
+    string,
+    { title: string; location: string; image: string; nextImage: string }
+  > = {
+    "Traditional Wedding": {
+      title: "Cameroonian Traditional Wedding",
+      location: "Douala & Yaoundé, Cameroon",
+      image: "/traditional_wedding.jpg",
+      nextImage: "/hero_architecture_grass.jpg",
+    },
+    "White Wedding": {
+      title: "Lake Como White Wedding",
+      location: "Lake Como, Italy",
+      image: "/white_wedding.jpg",
+      nextImage: "/IAS_4484.jpg",
+    },
+    "Indoor": {
+      title: "Studio Portrait Session",
+      location: "Paris, France",
+      image: "/portrait_editorial.jpg",
+      nextImage: "/IAS_1603.jpg",
+    },
+    "Outdoor": {
+      title: "Morning at Mont Blanc",
+      location: "Mont Blanc, France",
+      image: "/landscape_mont_blanc.jpg",
+      nextImage: "/countryside_sunset.jpg",
+    },
   };
 
-  const scrollToNode = (index: number) => {
-    if (!scrollContainerRef.current) return;
-    const clientWidth = scrollContainerRef.current.clientWidth;
-    scrollContainerRef.current.scrollTo({
-      left: index * clientWidth,
-      behavior: "smooth",
-    });
-    setActiveNode(index);
-  };
+  const currentExpertise =
+    expertiseData[selectedExpertise] || expertiseData["Traditional Wedding"];
+
+  // Awards State
+  const [activeAwardIndex, setActiveAwardIndex] = useState(0);
+
+  const awards = [
+    {
+      year: "2025",
+      title: "International Photography Awards",
+      image: "/landscape_mont_blanc.jpg",
+      photoTitle: "Morning at Mont Blanc",
+      photoDesc:
+        "Selected for scenic landscape photography capturing morning mountain light in the French Alps.",
+    },
+    {
+      year: "2022",
+      title: "Portrait Photography Feature",
+      image: "/portrait_editorial.jpg",
+      photoTitle: "Natural Studio Portrait",
+      photoDesc:
+        "Recognized for simple, natural light studio portraiture without artificial staging.",
+    },
+    {
+      year: "2017",
+      title: "Travel Photographer of the Year",
+      image: "/temple_silhouette.jpg",
+      photoTitle: "Kyoto Temple at Sunset",
+      photoDesc:
+        "Honored for travel and documentary photography in Kyoto, Japan.",
+    },
+    {
+      year: "2015",
+      title: "Sony Photography Feature",
+      image: "/countryside_sunset.jpg",
+      photoTitle: "Sunset in the Countryside",
+      photoDesc:
+        "Featured for beautiful warm evening light in countryside landscape photography.",
+    },
+  ];
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-white font-sans dark:bg-black">
-      <style jsx global>{`
-        @keyframes slide-top {
-          0%, 100% { transform: translate(0, 0); }
-          20%  { transform: translate(calc(100% + 1rem), 0); }
-          45%  { transform: translate(calc(100% + 1rem), calc(100% + 1rem)); }
-          70%  { transform: translate(0, calc(100% + 1rem)); }
-        }
-        @keyframes slide-right {
-          0%, 100% { transform: translate(0, 0); }
-          20%  { transform: translate(0, calc(100% + 1rem)); }
-          45%  { transform: translate(calc(-100% - 1rem), calc(100% + 1rem)); }
-          70%  { transform: translate(calc(-100% - 1rem), 0); }
-        }
-        @keyframes slide-bottom {
-          0%, 100% { transform: translate(0, 0); }
-          20%  { transform: translate(calc(-100% - 1rem), 0); }
-          45%  { transform: translate(calc(-100% - 1rem), calc(-100% - 1rem)); }
-          70%  { transform: translate(0, calc(-100% - 1rem)); }
-        }
-        @keyframes slide-left {
-          0%, 100% { transform: translate(0, 0); }
-          20%  { transform: translate(0, calc(-100% - 1rem)); }
-          45%  { transform: translate(calc(100% + 1rem), calc(-100% - 1rem)); }
-          70%  { transform: translate(calc(100% + 1rem), 0); }
-        }
-
-        .animate-puzzle-top { animation: slide-top 12s cubic-bezier(0.77, 0, 0.175, 1) infinite; }
-        .animate-puzzle-right { animation: slide-right 12s cubic-bezier(0.77, 0, 0.175, 1) infinite; }
-        .animate-puzzle-bottom { animation: slide-bottom 12s cubic-bezier(0.77, 0, 0.175, 1) infinite; }
-        .animate-puzzle-left { animation: slide-left 12s cubic-bezier(0.77, 0, 0.175, 1) infinite; }
-
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=UnifrakturMaguntia&family=Special+Elite&family=Orbitron:wght@800&family=Caveat:wght@700&family=Reenie+Beanie&display=swap');
-
-        .font-light-theme {
-          font-family: 'Playfair Display', serif;
-          font-style: italic;
-        }
-        .font-shadow-theme {
-          font-family: 'UnifrakturMaguntia', serif;
-        }
-        .font-frames-theme {
-          font-family: 'Special Elite', cursive;
-        }
-        .font-motion-theme {
-          font-family: 'Orbitron', sans-serif;
-          letter-spacing: 0.05em;
-        }
-        .font-soul-theme {
-          font-family: 'Caveat', cursive;
-        }
-        .font-handwriting-thin {
-          font-family: 'Reenie Beanie', cursive;
-        }
-      `}</style>
-
-      <Header />
-
-      {/* --- HERO SECTION --- */}
-      <main className="flex w-full flex-col items-center justify-between py-16 px-16 bg-white dark:bg-black lg:flex-row gap-16">
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left flex-1 max-w-xl">
-          <h1 className="max-w-md text-3xl font-semibold leading-[1.3] tracking-tight text-black dark:text-zinc-50 md:text-4xl lg:text-5xl min-h-[4.5rem] sm:min-h-[3.5rem] md:min-h-[5.5rem]">
-            Stories Written in{" "}
-            <span
-              key={wordIndex}
-              className={`inline-block text-yellow-500 dark:text-yellow-400 text-4xl md:text-5xl lg:text-6xl ${words[wordIndex].fontClass}`}
-            >
-              {words[wordIndex].text}
-            </span>
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Exceptional cinematography for directors, brands, and visionaries who demand unforgettable imagery.
-          </p>
-
-          <div className="flex flex-col gap-4 text-base font-medium sm:flex-row pt-4 w-full sm:w-auto">
-            <a
-              className="flex h-12 w-fit items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] "
-              href="https://vercel.com/new"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Book A Meeting
-            </a>
-            <a
-              className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-              href="#featured-work"
-            >
-              View Gallery
-            </a>
+    <div className="min-h-screen w-full bg-[#f4f4f6] text-[#111215] dark:bg-[#0c0d10] dark:text-[#f4f4f6] font-sans antialiased selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-300">
+      {/* Main Container */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col gap-8 sm:gap-12">
+        {/* ============================================================== */}
+        {/* HERO SECTION                                                  */}
+        {/* ============================================================== */}
+        <section className="dark relative w-full rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden bg-[#15171c] border border-black/10 dark:border-white/[0.08] min-h-[600px] sm:min-h-[680px] lg:min-h-[720px] flex flex-col justify-between p-6 sm:p-10 lg:p-12 shadow-2xl">
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={heroSlides[heroIndex].image}
+              alt={heroSlides[heroIndex].title}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover transition-opacity duration-700 ease-in-out scale-[1.02]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/45" />
           </div>
-        </div>
 
-        <div className="flex-1 w-full max-w-[450px] aspect-square flex items-center justify-center">
-          <div className="w-full h-full grid grid-cols-3 grid-rows-3 gap-4">
-            {heroImages.map((image, index) => (
-              <div
-                key={index}
-                className={`relative overflow-hidden rounded-2xl dark:border-white/[.05] ${image.fallbackColor} ${image.gridClasses}`}
-              >
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  sizes="(max-w-768px) 66vw, 50vw"
-                  className="object-cover pointer-events-none opacity-0 transition-opacity duration-300"
-                  onLoadingComplete={(img) => img.classList.remove("opacity-0")}
-                />
-              </div>
-            ))}
+          <Header />
+
+          {/* Hero Statement */}
+          <div className="relative z-10 my-auto pt-12 sm:pt-16 pb-8 max-w-4xl">
+            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[5rem] font-normal leading-[1.08] tracking-tight text-white">
+              Capturing moments, <br className="hidden sm:inline" />
+              preserving memories <br className="hidden sm:inline" />
+              for a lifetime
+            </h1>
           </div>
-        </div>
-      </main>
 
-      {/* --- FEATURED WORK SECTION --- */}
-      <section id="featured-work" className="w-full bg-white dark:bg-black py-24 px-16 border-t border-zinc-100 dark:border-zinc-950">
-        <div className="w-full mx-auto flex flex-col gap-12">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div className="flex flex-col gap-3 max-w-xl">
-              <h2 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50 md:text-3xl lg:text-4xl">
-                Featured Work
-              </h2>
-              <p className="text-base leading-7 text-zinc-600 dark:text-zinc-400">
-                A curated look at our latest film reel selections, framing intentional narratives across various formats and landscapes.
+          {/* Hero Bottom Bar */}
+          <div className="relative z-10 w-full flex flex-col md:flex-row md:items-end justify-between gap-6 pt-6 border-t border-white/10">
+            {/* Filter Chips */}
+            <div className="flex flex-wrap items-center gap-2">
+              {heroFilters.map((filter) => {
+                const isSelected = heroFilter === filter;
+                return (
+                  <button
+                    key={filter}
+                    onClick={() => {
+                      setHeroFilter(filter);
+                      if (filter === "Traditional Wedding") setHeroIndex(0);
+                      else if (filter === "White Wedding") setHeroIndex(1);
+                      else if (filter === "Outdoor") setHeroIndex(2);
+                      else setHeroIndex(3);
+                    }}
+                    className={`px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all ${
+                      isSelected
+                        ? "bg-white text-black font-semibold shadow-sm scale-105"
+                        : "bg-black/40 backdrop-blur-md text-zinc-300 border border-white/15 hover:border-white/40 hover:text-white"
+                    }`}
+                  >
+                    {filter}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Thumbnail Preview Buttons */}
+            <div className="flex items-center gap-2.5 overflow-x-auto pb-1">
+              {heroSlides.map((slide, idx) => {
+                const isActive = heroIndex === idx;
+                return (
+                  <button
+                    key={slide.id}
+                    onClick={() => setHeroIndex(idx)}
+                    className={`flex items-center gap-2.5 p-1.5 rounded-2xl transition-all text-left ${
+                      isActive
+                        ? "bg-white/20 backdrop-blur-md border border-white/30"
+                        : "bg-black/40 backdrop-blur-md border border-white/10 opacity-70 hover:opacity-100"
+                    }`}
+                  >
+                    <div className="relative w-11 h-9 rounded-xl overflow-hidden shrink-0">
+                      <Image
+                        src={slide.thumb}
+                        alt={slide.title}
+                        fill
+                        sizes="44px"
+                        className="object-cover"
+                      />
+                    </div>
+                    <span className="text-white text-xs font-medium pr-2 line-clamp-1 max-w-[120px]">
+                      {slide.title}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================================== */}
+        {/* ABOUT US INTRO                                                 */}
+        {/* ============================================================== */}
+        <section className="w-full py-10 sm:py-16 border-t border-black/[0.08] dark:border-white/[0.08]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
+            <div className="lg:col-span-4 flex flex-col gap-4">
+              <span className="text-xs font-sans tracking-wider uppercase text-zinc-500 dark:text-zinc-400 font-semibold">
+                About Us
+              </span>
+
+              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-normal leading-relaxed max-w-sm">
+                We are passionate about capturing genuine moments, happy celebrations, and real emotion in natural light.
               </p>
             </div>
-            <div>
-              <a
-                href="/projects"
-                className="group relative inline-flex items-center gap-1 text-sm font-medium text-black dark:text-zinc-50 pb-1 outline-none"
+
+            <div className="lg:col-span-8 flex flex-col items-start gap-6">
+              <h2 className="text-3xl sm:text-5xl lg:text-6xl font-normal leading-[1.18] text-zinc-600 dark:text-zinc-400">
+                <span className="text-zinc-900 dark:text-white font-semibold">Photography</span> that celebrates{" "}
+                <span className="text-zinc-900 dark:text-white font-semibold">real connections</span>, natural smiles, and{" "}
+                <span className="text-zinc-900 dark:text-white font-semibold">unforgettable stories</span>.
+              </h2>
+
+              <Link
+                href="/about"
+                className="group inline-flex items-center gap-3 rounded-full bg-zinc-900 hover:bg-black text-white dark:bg-white dark:hover:bg-zinc-100 dark:text-black pl-6 pr-2 py-2 text-xs font-semibold tracking-wider uppercase transition-all shadow-md hover:scale-[1.02] active:scale-98"
               >
-                Open Gallery
-                <span className="absolute bottom-0 left-0 h-[1px] w-full scale-x-0 bg-black dark:bg-zinc-50 transition-transform duration-300 ease-out origin-left group-hover:scale-x-100" />
-              </a>
+                <span>Learn More</span>
+                <div className="w-8 h-8 rounded-full bg-white text-black dark:bg-black dark:text-white flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
+                  <ArrowUpRight className="w-4 h-4" />
+                </div>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================================== */}
+        {/* OUR SERVICES CAROUSEL                                         */}
+        {/* ============================================================== */}
+        <section className="w-full bg-white dark:bg-[#131519] rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 lg:p-12 border border-black/[0.08] dark:border-white/[0.08] flex flex-col gap-8 shadow-xl dark:shadow-2xl transition-colors duration-300">
+          <div className="flex flex-col lg:flex-row justify-between lg:items-start gap-6">
+            <div className="flex flex-col gap-2 max-w-2xl">
+              <span className="text-xs font-sans tracking-wider uppercase text-zinc-500 dark:text-zinc-400 font-semibold">
+                Our Services
+              </span>
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-zinc-900 dark:text-white leading-tight">
+                Quality photography for weddings, portraits, and outdoor events
+              </h3>
+            </div>
+
+            {/* Service Filter Tabs */}
+            <div className="flex lg:flex-col flex-wrap gap-2 lg:gap-2.5 text-right">
+              {heroFilters.map((category) => {
+                const isActive = selectedExpertise === category;
+                return (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedExpertise(category)}
+                    className={`text-sm tracking-wide transition-colors py-1 px-2.5 rounded-lg text-left lg:text-right ${
+                      isActive
+                        ? "text-zinc-900 dark:text-white font-semibold bg-black/5 dark:bg-white/10"
+                        : "text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300 font-normal"
+                    }`}
+                  >
+                    {category}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-            {featuredProjects.map((project, index) => (
-              <div
-                key={index}
-                className={`group relative aspect-[3/4] w-full overflow-hidden rounded-2xl cursor-pointer ${project.fallbackColor}`}
+          {/* Featured Service Preview Card */}
+          <div className="flex flex-col gap-4">
+            <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full rounded-3xl overflow-hidden bg-zinc-900 border border-black/10 dark:border-white/10 group">
+              <Image
+                src={currentExpertise.image}
+                alt={currentExpertise.title}
+                fill
+                sizes="100vw"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+
+              <div className="absolute bottom-6 left-6 right-6 flex flex-col gap-1">
+                <span className="text-xs font-semibold uppercase text-zinc-300">
+                  {selectedExpertise}
+                </span>
+                <h4 className="text-xl sm:text-2xl font-medium text-white">
+                  {currentExpertise.title}
+                </h4>
+                <div className="flex items-center gap-1.5 text-xs text-zinc-300 mt-1">
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>{currentExpertise.location}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    const keys = Object.keys(expertiseData);
+                    const idx = keys.indexOf(selectedExpertise);
+                    const prev = (idx - 1 + keys.length) % keys.length;
+                    setSelectedExpertise(keys[prev]);
+                  }}
+                  className="w-9 h-9 rounded-full border border-black/15 dark:border-white/20 flex items-center justify-center text-zinc-800 dark:text-white hover:bg-zinc-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+                  aria-label="Previous"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => {
+                    const keys = Object.keys(expertiseData);
+                    const idx = keys.indexOf(selectedExpertise);
+                    const next = (idx + 1) % keys.length;
+                    setSelectedExpertise(keys[next]);
+                  }}
+                  className="w-9 h-9 rounded-full border border-black/15 dark:border-white/20 flex items-center justify-center text-zinc-800 dark:text-white hover:bg-zinc-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+                  aria-label="Next"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+
+              <Link
+                href="/gallery"
+                className="group inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-zinc-700 hover:text-black dark:text-zinc-300 dark:hover:text-white transition-colors"
               >
-                <Image
-                  src={project.src}
-                  alt={project.title}
-                  fill
-                  sizes="(max-w-640px) 100vw, (max-w-1024px) 50vw, 25vw"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105 opacity-0"
-                  onLoadingComplete={(img) => img.classList.remove("opacity-0")}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-40 transition-opacity group-hover:opacity-0" />
-                <div className="absolute inset-0 bg-black/40 backdrop-blur-[4px] flex flex-col justify-end p-6 opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100">
-                  <div className="transform translate-y-4 transition-transform duration-300 ease-out group-hover:translate-y-0">
-                    <span className="text-xs font-mono uppercase tracking-widest text-zinc-300">
-                      {project.category}
+                <span>View All Works</span>
+                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================================== */}
+        {/* RECENT WORK (3 CARDS)                                         */}
+        {/* ============================================================== */}
+        <section className="w-full py-10 sm:py-14">
+          <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-6 pb-8 border-b border-black/[0.08] dark:border-white/[0.08]">
+            <div className="flex flex-col gap-2 max-w-2xl">
+              <span className="text-xs font-sans tracking-wider uppercase text-zinc-500 dark:text-zinc-400 font-semibold">
+                Our Work
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-normal text-zinc-900 dark:text-white leading-tight">
+                Recent photography highlights
+              </h2>
+            </div>
+
+            <div className="flex flex-col items-start gap-4 max-w-sm">
+              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-normal leading-relaxed">
+                Take a look at some of our favorite recent photo sessions and weddings.
+              </p>
+              <Link
+                href="/gallery"
+                className="group inline-flex items-center gap-3 rounded-full bg-zinc-900 hover:bg-black text-white dark:bg-white dark:hover:bg-zinc-100 dark:text-black pl-6 pr-2 py-2 text-xs font-semibold tracking-wider uppercase transition-all shadow-md hover:scale-[1.02] active:scale-98"
+              >
+                <span>View Full Gallery</span>
+                <div className="w-8 h-8 rounded-full bg-white text-black dark:bg-black dark:text-white flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
+                  <ArrowUpRight className="w-4 h-4" />
+                </div>
+              </Link>
+            </div>
+          </div>
+
+          {/* 3-Card Portfolio Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-8">
+            {/* Card 1: Wide Featured Traditional Wedding */}
+            <div className="lg:col-span-6 relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-auto lg:min-h-[460px] rounded-[2rem] overflow-hidden bg-zinc-900 border border-white/10 p-6 sm:p-8 flex flex-col justify-between group shadow-lg">
+              <Image
+                src="/traditional_wedding.jpg"
+                alt="Cameroonian Traditional Wedding"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/30" />
+
+              <div className="relative z-10 flex justify-end">
+                <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-[11px] font-medium text-white">
+                  Traditional Wedding
+                </span>
+              </div>
+
+              <div className="relative z-10 flex flex-col gap-2">
+                <h3 className="text-xl sm:text-2xl font-medium text-white">
+                  Cameroonian Traditional Wedding
+                </h3>
+                <p className="text-xs text-zinc-300 font-normal max-w-md line-clamp-2">
+                  A colorful celebration of cultural heritage, royal traditional attire, and joyous family blessings.
+                </p>
+                <div className="flex items-center gap-1.5 text-xs text-zinc-300 mt-1">
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>Douala &amp; Yaoundé, Cameroon</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2: White Wedding */}
+            <div className="lg:col-span-3 relative aspect-[3/4] sm:aspect-[4/5] lg:aspect-auto lg:min-h-[460px] rounded-[2rem] overflow-hidden bg-zinc-900 border border-white/10 p-6 flex flex-col justify-between group shadow-lg">
+              <Image
+                src="/white_wedding.jpg"
+                alt="Lake Como White Wedding"
+                fill
+                sizes="(max-width: 1024px) 100vw, 25vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+
+              <div className="relative z-10 flex justify-end">
+                <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-[11px] font-medium text-white">
+                  White Wedding
+                </span>
+              </div>
+
+              <div className="relative z-10 flex flex-col gap-1.5">
+                <h3 className="text-lg font-medium text-white">
+                  Lake Como White Wedding
+                </h3>
+                <p className="text-xs text-zinc-300 font-normal line-clamp-2">
+                  An outdoor lakeside ceremony with classic white florals.
+                </p>
+                <div className="flex items-center gap-1.5 text-xs text-zinc-300 mt-1">
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>Lake Como, Italy</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3: Indoor Portrait */}
+            <div className="lg:col-span-3 relative aspect-[3/4] sm:aspect-[4/5] lg:aspect-auto lg:min-h-[460px] rounded-[2rem] overflow-hidden bg-zinc-900 border border-white/10 p-6 flex flex-col justify-between group shadow-lg">
+              <Image
+                src="/portrait_editorial.jpg"
+                alt="Studio Portrait Session"
+                fill
+                sizes="(max-width: 1024px) 100vw, 25vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+
+              <div className="relative z-10 flex justify-end">
+                <span className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-[11px] font-medium text-white">
+                  Indoor
+                </span>
+              </div>
+
+              <div className="relative z-10 flex flex-col gap-1.5">
+                <h3 className="text-lg font-medium text-white">
+                  Studio Portrait Session
+                </h3>
+                <p className="text-xs text-zinc-300 font-normal line-clamp-2">
+                  Clean natural light portraits in a minimal studio setting.
+                </p>
+                <div className="flex items-center gap-1.5 text-xs text-zinc-300 mt-1">
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>Paris, France</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================================== */}
+        {/* AWARDS & FEATURES                                             */}
+        {/* ============================================================== */}
+        <section className="w-full py-10 sm:py-14 border-t border-black/[0.08] dark:border-white/[0.08]">
+          <div className="flex flex-col lg:flex-row justify-between lg:items-start gap-6 pb-8">
+            <div className="flex flex-col gap-1">
+              <span className="text-xs font-sans tracking-wider uppercase text-zinc-500 dark:text-zinc-400 font-semibold">
+                Recognition
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-normal text-zinc-900 dark:text-white leading-tight">
+                Featured &amp; Award-Winning Work
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-normal max-w-sm leading-relaxed">
+              Our photographs have been recognized in international exhibitions and photography publications.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-2">
+            <div className="lg:col-span-7 flex flex-col divide-y divide-black/[0.08] dark:divide-white/[0.08] border-y border-black/[0.08] dark:border-white/[0.08]">
+              {awards.map((award, idx) => {
+                const isActive = activeAwardIndex === idx;
+                return (
+                  <div
+                    key={award.year}
+                    onMouseEnter={() => setActiveAwardIndex(idx)}
+                    onClick={() => setActiveAwardIndex(idx)}
+                    className={`py-4 sm:py-5 px-3 sm:px-4 flex items-center justify-between cursor-pointer transition-all rounded-xl ${
+                      isActive
+                        ? "bg-black/[0.05] text-zinc-900 dark:bg-white/[0.07] dark:text-white font-medium"
+                        : "text-zinc-600 hover:text-zinc-900 hover:bg-black/[0.02] dark:text-zinc-400 dark:hover:text-white"
+                    }`}
+                  >
+                    <span className="text-xs font-mono tracking-wider w-16 text-zinc-500">
+                      {award.year}
                     </span>
-                    <h3 className="text-lg font-medium text-white mt-1 leading-tight">
-                      {project.title}
-                    </h3>
-                    <div className="flex items-center justify-between border-t border-white/20 mt-4 pt-3 text-xs text-zinc-400 font-light">
-                      <span>Cinematography</span>
-                      <span>© {project.year}</span>
+
+                    <h4 className="text-sm sm:text-base flex-1">
+                      {award.title}
+                    </h4>
+
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                        isActive
+                          ? "bg-zinc-900 text-white dark:bg-white dark:text-black shadow-sm"
+                          : "border border-black/15 text-zinc-500 dark:border-white/20 dark:text-zinc-400"
+                      }`}
+                    >
+                      <ArrowUpRight className="w-4 h-4" />
                     </div>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* --- REEL HIGHLIGHTS CAROUSEL SECTION --- */}
-      <section className="w-full bg-white dark:bg-black pb-32 px-16">
-        <div className="w-full mx-auto flex flex-col gap-12">
-          <div className="flex flex-col gap-3 max-w-xl">
-            <h2 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50 md:text-3xl lg:text-4xl">
-              Production Highlights
-            </h2>
-            <p className="text-base leading-7 text-zinc-600 dark:text-zinc-400">
-              Behind-the-lens look at specific frames, lighting configurations, and technical execution from recent sets.
-            </p>
-          </div>
-
-          <div className="w-full relative">
-            <div
-              ref={scrollContainerRef}
-              onScroll={handleScroll}
-              className="w-full flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-4"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            >
-              {highlights.map((highlight, index) => (
-                <div
-                  key={index}
-                  className="min-w-full sm:min-w-[calc(50%-12px)] lg:min-w-[calc(33.333%-16px)] snap-start shrink-0"
-                >
-                  <HighlightCard highlight={highlight} />
-                </div>
-              ))}
+                );
+              })}
             </div>
-          </div>
-        </div>
-      </section>
 
-      <section className="w-full bg-white dark:bg-black py-24 px-16 border-t border-zinc-100 dark:border-zinc-950">
-        <div className="w-full flex flex-col lg:flex-row gap-16 items-center justify-between">
-
-          {/* Left Side: Title and Description */}
-          <div className="flex flex-col gap-6 flex-1 max-w-xl text-center sm:text-left items-center sm:items-start">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl text-black dark:text-zinc-50 font-handwriting-thin leading-none tracking-wide">
-              Foundation
-            </h2>
-            <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-              IAS Studio exists at the intersection of observation and meaning. We do not merely capture images; we document presence, structure, emotion, and time as they naturally unfold. Our work is guided by a deeper question: what remains when the moment has passed? We believe photography and visual storytelling are not acts of decoration, but acts of preservation. Each frame is treated as an archive of human experience, architecture, culture, and identity. IAS Studio is built on the principle that clarity is more powerful than excess, and intention is more valuable than volume.
-            </p>
-          </div>
-
-          {/* Right Side: Shattered Glass Frame Component */}
-          <div className="flex-1 w-full max-w-[450px] flex justify-center lg:justify-end">
-            <div className="w-full max-w-[400px] aspect-[3/4]">
-              <ShatteredGlassFrame />
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* --- CINEMATIC FOOTER SECTION --- */}
-      <footer className="relative w-full bg-black text-zinc-400 border-t border-zinc-900 overflow-hidden transition-colors duration-300">
-
-        {/* Background Yellow Unconnected Square Grid */}
-        <div className="absolute inset-0 pointer-events-none opacity-20 z-0">
-          <svg className="w-full h-full">
-            <defs>
-              <pattern id="squareGrid" width="28" height="28" patternUnits="userSpaceOnUse">
-                <rect x="0" y="0" width="2" height="2" fill="#eab308" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#squareGrid)" />
-          </svg>
-        </div>
-
-        <div className="relative w-full mx-auto max-w-7xl py-16 px-16 flex flex-col gap-16 z-10">
-
-          {/* Top Half: Brand Identity vs Functional Links Layout Split */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 w-full">
-
-            {/* Column 1: Studio Profile / Core Statement */}
-            <div className="flex flex-col gap-4 md:col-span-4">
-              <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight text-white cursor-pointer w-fit">
+            <div className="lg:col-span-5 flex flex-col gap-3">
+              <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-zinc-900 border border-black/10 dark:border-white/10 shadow-xl">
                 <Image
-                  className="invert"
-                  src="/IASLOGO.png"
-                  alt="Next.js logo"
-                  width={90}
-                  height={18}
-                  priority
+                  src={awards[activeAwardIndex].image}
+                  alt={awards[activeAwardIndex].photoTitle}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  className="object-cover transition-opacity duration-300"
                 />
-              </Link>
-              <p className="text-sm leading-6 font-light max-w-sm text-zinc-400">
-                Crafting intentional visual textures for narrative films, commercial campaigns, and global art installations.
-              </p>
-            </div>
+              </div>
 
-            {/* Column 2: Navigation Categories */}
-            <div className="flex flex-col gap-4 md:col-span-3 md:col-start-6">
-              <h4 className="text-xs font-mono uppercase tracking-widest text-zinc-200 font-medium">
-                Navigation
-              </h4>
-              <ul className="flex flex-col gap-3 text-sm font-light">
-                {["Gallery", "About Us", "Contact Us"].map((item) => (
-                  <li key={item}>
-                    <a
-                      href={`/${item.toLowerCase().replace(" ", "")}`}
-                      className="hover:text-yellow-400 transition-colors duration-200 text-zinc-400"
-                    >
-                      {item}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Column 3: Contact / Booking Details */}
-            <div className="flex flex-col gap-4 md:col-span-4">
-              <h4 className="text-xs font-mono uppercase tracking-widest text-zinc-200 font-medium">
-                Newsletter
-              </h4>
-              <p className="text-sm font-light leading-6 text-zinc-400">
-                Receive quarterly breakdowns of camera configurations and lighting plans.
-              </p>
-
-              {/* Premium Input Container with Animated Border Focus */}
-              <form
-                onSubmit={(e) => e.preventDefault()}
-                className="group relative flex w-full max-w-sm items-center border-b border-zinc-800 focus-within:border-yellow-400 transition-colors duration-300 pb-1"
-              >
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  required
-                  className="w-full bg-transparent text-sm font-light py-2 text-white placeholder-zinc-650 focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  aria-label="Subscribe"
-                  className="text-xs uppercase font-mono tracking-wider ml-2 text-yellow-500 hover:text-yellow-400 transition-colors"
-                >
-                  Join
-                </button>
-              </form>
-            </div>
-
-          </div>
-
-          {/* Bottom Half: Copyright Metatags & Social Links Row */}
-          <div className="w-full flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between border-t border-zinc-900 pt-8 text-xs font-light tracking-wide text-zinc-500">
-            <div>
-              <span>© {new Date().getFullYear()} Studio. All rights reserved. Built with precision.</span>
-            </div>
-
-            {/* Social Intermediaries */}
-            <div className="flex items-center gap-6">
-              {["Vimeo", "Instagram", "LinkedIn"].map((platform) => (
-                <a
-                  key={platform}
-                  href={`https://${platform.toLowerCase()}.com`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-yellow-400 transition-colors duration-200 text-zinc-400"
-                >
-                  {platform}
-                </a>
-              ))}
+              <div className="flex flex-col gap-1 px-1">
+                <h4 className="text-sm sm:text-base font-medium text-zinc-900 dark:text-white">
+                  {awards[activeAwardIndex].photoTitle}
+                </h4>
+                <p className="text-xs text-zinc-600 dark:text-zinc-400 font-normal leading-relaxed">
+                  {awards[activeAwardIndex].photoDesc}
+                </p>
+              </div>
             </div>
           </div>
+        </section>
 
-        </div>
-      </footer>
+        <Footer />
+      </div>
     </div>
   );
 }
