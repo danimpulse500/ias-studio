@@ -57,7 +57,7 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       className={cn(
-        "h-full antialiased scroll-smooth",
+        "dark h-full antialiased scroll-smooth",
         displayFont.variable,
         sansFont.variable,
         monoFont.variable

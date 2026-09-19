@@ -3,201 +3,200 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/shared/Header";
-import { ArrowUpRight, Sparkles } from "lucide-react";
+import { Footer } from "@/components/shared/Footer";
+import { ArrowUpRight, Heart, Sparkles, ShieldCheck, Camera } from "lucide-react";
 
 export default function AboutPage() {
-  const principles = [
+  const highlights = [
     {
       num: "01",
-      title: "Unhurried Observation",
+      title: "Natural & Relaxed",
       description:
-        "True emotion cannot be choreographed. We operate with silent agility and complete discretion, allowing genuine human connections, unscripted glances, and spontaneous joy to unfold without interruption.",
+        "No stiff or awkward poses. We help you feel comfortable in front of the camera so your smiles and moments feel completely genuine.",
     },
     {
       num: "02",
-      title: "Natural Daylight & Optical Poetics",
+      title: "Clean Lighting & Style",
       description:
-        "We harness natural ambient illumination and soft daylight to preserve organic skin tones and depth. By relying on prime vintage and modern anamorphic optics, our frames possess warmth and dimensionality impossible with digital filters.",
+        "We use beautiful natural daylight and clean studio lights so your colors look vibrant, skin tones look true, and every photo looks sharp.",
     },
     {
       num: "03",
-      title: "Heirloom Archival Permanence",
+      title: "High-Resolution Delivery",
       description:
-        "Every client folio is preserved for decades. We utilize 100% cotton rag museum-grade papers, pigment inks rated for 300+ years, and dual encrypted private digital vaults to guarantee your history survives across generations.",
+        "Every single photo is carefully edited and delivered in full resolution in an easy-to-use online gallery, ready for download and printing.",
     },
   ];
 
-  const standards = [
+  const services = [
     {
-      category: "Medium Format Raw",
-      spec: "100-Megapixel Hasselblad & Leica M Systems",
-      detail: "Incredible dynamic range, true optical gradation, and microscopic architectural clarity.",
+      title: "Indoor Photography",
+      detail:
+        "Studio portraits, headshots, bridal preparation, and clean indoor family shoots.",
     },
     {
-      category: "Cinematic Glass",
-      spec: "Cooke Anamorphic /i & Leica Summilux Primes",
-      detail: "Iconic horizontal lens flares, painterly focus falloff, and dimensional character.",
+      title: "Outdoor Sessions",
+      detail:
+        "Couples, families, and creative portrait sessions in natural outdoor scenery.",
     },
     {
-      category: "Photochemical Film",
-      spec: "Kodak Vision3 500T & Tri-X 400 35mm",
-      detail: "Warm tangible grain and nostalgic texture recorded directly to physical celluloid emulsion.",
+      title: "Traditional Weddings",
+      detail:
+        "Full coverage of cultural traditions, traditional attire, and memorable family celebrations.",
     },
     {
-      category: "Museum Archival",
-      spec: "Hahnemühle Photo Rag Fine Art Prints",
-      detail: "Archival pigment prints designed to resist fading and degradation for centuries.",
+      title: "White Weddings",
+      detail:
+        "Comprehensive coverage from morning getting-ready to the ceremony, vows, and party.",
     },
   ];
 
   return (
-    <div className="min-h-screen w-full flex flex-col font-sans transition-colors duration-300">
-      <Header />
+    <div className="min-h-screen w-full bg-[#f4f4f6] text-[#111215] dark:bg-[#0c0d10] dark:text-[#f4f4f6] font-sans antialiased selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-300">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col gap-8 sm:gap-12">
+        {/* ============================================================== */}
+        {/* HERO SECTION                                                  */}
+        {/* ============================================================== */}
+        <section className="relative w-full rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden bg-white dark:bg-[#15171c] border border-black/[0.08] dark:border-white/[0.08] p-6 sm:p-10 lg:p-12 flex flex-col gap-10 shadow-xl dark:shadow-2xl transition-colors duration-300">
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <Image
+              src="/countryside_sunset.jpg"
+              alt="IAS Studio About Us"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover opacity-15 dark:opacity-20 scale-[1.02]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-white via-white/85 to-white/50 dark:from-[#15171c] dark:via-[#15171c]/80 dark:to-black/60 transition-colors duration-300" />
+          </div>
 
-      <main className="w-full max-w-7xl mx-auto px-6 sm:px-12 lg:px-20 py-16 flex-1 flex flex-col gap-24">
-        {/* Atelier Hero Statement */}
-        <div className="flex flex-col gap-8 max-w-4xl border-b border-black/[0.08] dark:border-white/[0.1] pb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-black/[0.04] dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.12] w-fit shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-amber-500 dark:bg-amber-400" />
-            <span className="text-[11px] font-mono tracking-[0.25em] uppercase text-zinc-700 dark:text-zinc-300 font-semibold">
-              The Atelier Manifesto
+          <Header />
+
+          <div className="relative z-10 flex flex-col gap-4 max-w-4xl">
+            <span className="text-xs font-sans tracking-wider uppercase text-zinc-500 dark:text-zinc-400 font-semibold">
+              About Us
             </span>
-          </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-normal text-zinc-950 dark:text-white leading-[1.05] tracking-tight">
-            An independent atelier <br />
-            <span className="italic text-amber-700 dark:text-amber-200">dedicated to the art of memory.</span>
-          </h1>
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-normal leading-tight text-zinc-900 dark:text-white">
+              We capture <span className="font-semibold">real, memorable moments</span> you will cherish for a lifetime.
+            </h1>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-base sm:text-lg text-zinc-700 dark:text-zinc-300 font-light leading-relaxed">
-            <p>
-              IAS Studio was founded on a singular conviction: the most enduring imagery is rooted in honesty, not manufactured perfection. We do not stage synthetic moments—we document genuine presence.
-            </p>
-            <p>
-              Whether we are commissioned for a multi-day wedding celebration in Europe, capturing the timeless geometry of a modern architectural feat, or crafting an intimate family portrait, our work is defined by quiet reverence and emotional depth.
-            </p>
-          </div>
-        </div>
-
-        {/* Large Format Visual Centerpiece */}
-        <div className="relative aspect-[21/9] w-full rounded-3xl overflow-hidden border border-black/[0.08] dark:border-white/[0.15] shadow-xl bg-zinc-200 dark:bg-zinc-900 group">
-          <Image
-            src="/IAS_3900 (2).jpg"
-            alt="IAS Studio portrait session in Paris"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.02]"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-          <div className="absolute bottom-8 left-8 right-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-            <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-amber-300 block mb-1">
-                Studio Archives • Paris Atelier
-              </span>
-              <p className="text-sm sm:text-base font-serif italic text-white max-w-lg">
-                &ldquo;Light is our ink, and time is our paper.&rdquo;
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-normal leading-relaxed pt-2">
+              <p>
+                At IAS Studio, our goal is simple: capture your most meaningful moments in clean, beautiful photographs. We love working with people and making them feel at ease so that every image looks natural and authentic.
+              </p>
+              <p>
+                Whether you are celebrating a traditional wedding, planning an outdoor celebration, or looking for a clean studio portrait, we are here to document your story with care and attention to detail.
               </p>
             </div>
-            <div className="text-xs font-mono text-zinc-300">
-              Hasselblad H6D-100c • 80mm f/2.8
+          </div>
+
+          {/* Feature Showcase Banner */}
+          <div className="relative aspect-[16/9] sm:aspect-[21/9] w-full rounded-3xl overflow-hidden border border-black/10 dark:border-white/10 shadow-2xl bg-zinc-900 group">
+            <Image
+              src="/hero_architecture_grass.jpg"
+              alt="IAS Studio Photography"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            <div className="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+              <div>
+                <span className="text-xs text-zinc-300 block mb-1">
+                  IAS Studio Photography
+                </span>
+                <p className="text-base sm:text-lg font-medium text-white max-w-lg">
+                  &ldquo;Making great memories look timeless and effortless.&rdquo;
+                </p>
+              </div>
+              <Link
+                href="/gallery"
+                className="inline-flex items-center gap-1.5 text-xs text-white hover:underline underline-offset-4 font-semibold"
+              >
+                <span>View Our Gallery</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* The 3 Core Pillars */}
-        <div className="flex flex-col gap-12">
-          <div className="flex flex-col gap-2 max-w-xl">
-            <span className="text-xs font-mono tracking-[0.25em] uppercase text-amber-700 dark:text-amber-400 font-semibold">
-              Core Principles
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-zinc-950 dark:text-white">
-              The Atelier Discipline
-            </h2>
-            <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-300 font-light">
-              Every commission adheres to three foundational standards developed over a decade behind the camera.
+        {/* ============================================================== */}
+        {/* HOW WE WORK (3 CARDS)                                         */}
+        {/* ============================================================== */}
+        <section className="w-full py-8 sm:py-12 border-t border-black/[0.08] dark:border-white/[0.08] flex flex-col gap-8">
+          <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-4">
+            <div className="flex flex-col gap-2 max-w-2xl">
+              <span className="text-xs font-sans tracking-wider uppercase text-zinc-500 dark:text-zinc-400 font-semibold">
+                Why Work With Us
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-normal text-zinc-900 dark:text-white">
+                Simple, stress-free photography from start to finish
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-normal max-w-sm leading-relaxed">
+              We take the stress out of photo shoots so you can simply enjoy your day.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {principles.map((p) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {highlights.map((item) => (
               <div
-                key={p.num}
-                className="glass-panel-glow p-8 rounded-3xl border border-black/[0.08] dark:border-white/[0.14] flex flex-col gap-4 relative overflow-hidden group hover:border-amber-500/50 dark:hover:border-amber-400/50 transition-all duration-300"
+                key={item.num}
+                className="bg-white dark:bg-[#131519] p-7 rounded-3xl border border-black/[0.08] dark:border-white/[0.08] flex flex-col gap-3 group hover:border-black/20 dark:hover:border-white/20 transition-all shadow-md dark:shadow-xl"
               >
-                <span className="text-2xl font-mono font-semibold text-amber-600 dark:text-amber-400">
-                  {p.num}
-                </span>
-                <h3 className="text-xl font-serif text-zinc-950 dark:text-white group-hover:text-amber-700 dark:group-hover:text-amber-200 transition-colors">
-                  {p.title}
+                <div className="flex items-center justify-between">
+                  <span className="text-xl font-bold text-zinc-900 dark:text-white">
+                    {item.num}
+                  </span>
+                  <div className="w-8 h-8 rounded-full bg-black/[0.04] dark:bg-white/[0.06] border border-black/10 dark:border-white/10 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                </div>
+
+                <h3 className="text-lg font-medium text-zinc-900 dark:text-white">
+                  {item.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 font-light leading-relaxed">
-                  {p.description}
+
+                <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-normal leading-relaxed">
+                  {item.description}
                 </p>
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* Technical Mastery & Equipment Matrix */}
-        <div className="w-full px-8 py-12 rounded-3xl glass-panel-glow border border-black/[0.08] dark:border-white/[0.14] flex flex-col gap-10">
-          <div className="flex flex-col gap-2">
-            <span className="text-xs font-mono tracking-[0.25em] uppercase text-amber-700 dark:text-amber-400 font-semibold">
-              Technical Standards
+        {/* ============================================================== */}
+        {/* OUR SERVICES (4 BOXES)                                        */}
+        {/* ============================================================== */}
+        <section className="w-full bg-white dark:bg-[#131519] rounded-[2rem] sm:rounded-[2.5rem] p-8 sm:p-12 border border-black/[0.08] dark:border-white/[0.08] flex flex-col gap-8 shadow-xl dark:shadow-2xl transition-colors duration-300">
+          <div className="flex flex-col gap-2 max-w-2xl">
+            <span className="text-xs font-sans tracking-wider uppercase text-zinc-500 dark:text-zinc-400 font-semibold">
+              Our Services
             </span>
-            <h3 className="text-2xl sm:text-4xl font-serif text-zinc-950 dark:text-white">
-              Instruments of Precision
+            <h3 className="text-2xl sm:text-3xl font-normal text-zinc-900 dark:text-white">
+              What we photograph
             </h3>
-            <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 font-light max-w-2xl">
-              We employ only the finest medium format digital backs, cinema primes, and rare 35mm film stocks to achieve unparalleled tonal richness.
+            <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-normal leading-relaxed">
+              We specialize in weddings and lifestyle portraits with clean, natural editing.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4 border-t border-black/[0.08] dark:border-white/[0.1]">
-            {standards.map((s, idx) => (
-              <div key={idx} className="flex flex-col gap-2">
-                <span className="text-xs font-mono text-amber-700 dark:text-amber-400 uppercase tracking-wider font-semibold">
-                  {s.category}
-                </span>
-                <h4 className="text-base font-medium text-zinc-950 dark:text-white">{s.spec}</h4>
-                <p className="text-xs text-zinc-600 dark:text-zinc-400 font-light leading-relaxed">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4 border-t border-black/[0.08] dark:border-white/[0.08]">
+            {services.map((s, idx) => (
+              <div key={idx} className="flex flex-col gap-1.5 p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.05] dark:border-white/[0.05]">
+                <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">{s.title}</h4>
+                <p className="text-xs text-zinc-600 dark:text-zinc-400 font-normal leading-relaxed">
                   {s.detail}
                 </p>
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* Direct Studio Inquiry Callout */}
-        <div className="p-10 sm:p-14 rounded-3xl glass-panel-gold text-center flex flex-col items-center gap-6 relative overflow-hidden">
-          <div className="w-12 h-12 rounded-full bg-amber-500/10 dark:bg-amber-400/20 border border-amber-500/30 dark:border-amber-400/40 flex items-center justify-center text-amber-700 dark:text-amber-300 mb-1">
-            <Sparkles className="w-6 h-6" />
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-serif text-zinc-950 dark:text-white max-w-2xl">
-            Planning a celebration or architectural commission?
-          </h2>
-          <p className="text-sm sm:text-base text-zinc-700 dark:text-zinc-300 font-light max-w-xl leading-relaxed">
-            We are based in London and accept a select number of worldwide destination commissions each calendar year.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 dark:from-amber-400 dark:via-amber-300 dark:to-yellow-200 text-black text-xs font-semibold uppercase tracking-wider shadow-[0_4px_25px_rgba(234,179,8,0.4)] hover:scale-105 transition-all"
-          >
-            <span>Inquire About Availability</span>
-            <ArrowUpRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="w-full px-6 sm:px-12 lg:px-20 py-10 border-t border-black/[0.08] dark:border-white/[0.1] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-500 dark:text-zinc-400">
-        <div>© {new Date().getFullYear()} IAS Studio. London • Worldwide.</div>
-        <div className="flex items-center gap-6">
-          <Link href="/gallery" className="hover:text-amber-600 dark:hover:text-amber-300 transition-colors">Portfolio</Link>
-          <Link href="/about" className="text-zinc-950 dark:text-white font-medium hover:text-amber-600 dark:hover:text-amber-300 transition-colors">Atelier</Link>
-          <Link href="/contact" className="hover:text-amber-600 dark:hover:text-amber-300 transition-colors">Inquiries</Link>
-        </div>
-      </footer>
+        <Footer />
+      </div>
     </div>
   );
 }

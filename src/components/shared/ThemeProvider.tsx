@@ -19,7 +19,7 @@ const ThemeContext = createContext<ThemeContextType>({
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("light");
+  const [theme, setThemeState] = useState<Theme>("dark");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -29,9 +29,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setThemeState(stored);
       document.documentElement.classList.toggle("dark", stored === "dark");
     } else {
-      // Default to radiant light mode as requested
-      setThemeState("light");
-      document.documentElement.classList.remove("dark");
+      // Default to dark mode as requested
+      setThemeState("dark");
+      document.documentElement.classList.add("dark");
     }
   }, []);
 
