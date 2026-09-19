@@ -107,10 +107,10 @@ export default function ContactPage() {
                   <div>
                     <span className="text-[11px] text-zinc-500 block mb-0.5">Location</span>
                     <span className="text-zinc-900 dark:text-white text-sm font-medium">
-                      London, United Kingdom
+                      Douala &amp; Yaoundé, Cameroon
                     </span>
                     <span className="text-zinc-500 dark:text-zinc-400 block text-[11px] mt-0.5">
-                      Available for travel worldwide
+                      Available across Cameroon &amp; worldwide for destination shoots
                     </span>
                   </div>
                 </div>
@@ -279,7 +279,7 @@ export default function ContactPage() {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. London, UK or Lagos, Nigeria"
+                      placeholder="e.g. Douala, Yaoundé, or Destination"
                       value={formData.guestCountOrScope}
                       onChange={(e) =>
                         setFormData({

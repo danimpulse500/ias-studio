@@ -21,8 +21,8 @@ export default function HomePage() {
   const heroSlides = [
     {
       id: "01",
-      title: "Nigerian Traditional Wedding",
-      location: "Benin City & Lagos, Nigeria",
+      title: "Cameroonian Traditional Wedding",
+      location: "Douala & Yaoundé, Cameroon",
       image: "/traditional_wedding.jpg",
       thumb: "/traditional_wedding.jpg",
     },
@@ -64,8 +64,8 @@ export default function HomePage() {
     { title: string; location: string; image: string; nextImage: string }
   > = {
     "Traditional Wedding": {
-      title: "Nigerian Traditional Wedding",
-      location: "Benin City & Lagos, Nigeria",
+      title: "Cameroonian Traditional Wedding",
+      location: "Douala & Yaoundé, Cameroon",
       image: "/traditional_wedding.jpg",
       nextImage: "/hero_architecture_grass.jpg",
     },
@@ -393,7 +393,7 @@ export default function HomePage() {
             <div className="lg:col-span-6 relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-auto lg:min-h-[460px] rounded-[2rem] overflow-hidden bg-zinc-900 border border-white/10 p-6 sm:p-8 flex flex-col justify-between group shadow-lg">
               <Image
                 src="/traditional_wedding.jpg"
-                alt="Nigerian Traditional Wedding"
+                alt="Cameroonian Traditional Wedding"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -408,14 +408,14 @@ export default function HomePage() {
 
               <div className="relative z-10 flex flex-col gap-2">
                 <h3 className="text-xl sm:text-2xl font-medium text-white">
-                  Nigerian Traditional Wedding
+                  Cameroonian Traditional Wedding
                 </h3>
                 <p className="text-xs text-zinc-300 font-normal max-w-md line-clamp-2">
-                  A colorful celebration of cultural heritage, handcrafted coral beads, and joyous family blessings.
+                  A colorful celebration of cultural heritage, royal traditional attire, and joyous family blessings.
                 </p>
                 <div className="flex items-center gap-1.5 text-xs text-zinc-300 mt-1">
                   <MapPin className="w-3.5 h-3.5" />
-                  <span>Benin City &amp; Lagos, Nigeria</span>
+                  <span>Douala &amp; Yaoundé, Cameroon</span>
                 </div>
               </div>
             </div>

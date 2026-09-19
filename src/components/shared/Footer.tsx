@@ -41,11 +41,11 @@ export function Footer({ showBanner = true }: { showBanner?: boolean }) {
             {/* Right Column: Address & Contact info */}
             <div className="flex flex-col gap-2 text-xs font-mono text-zinc-600 dark:text-zinc-400 text-left lg:text-right border-t lg:border-t-0 pt-6 lg:pt-0 border-black/[0.08] dark:border-white/[0.08]">
               <span className="text-zinc-900 dark:text-white font-sans text-sm font-medium">
-                London Studio
+                IAS Studio
               </span>
-              <span>459 Mount Street, Mayfair</span>
-              <span>London W1K 2SU, United Kingdom</span>
-              <span className="text-zinc-900 dark:text-white mt-1">+44 (0) 20 7946 0912</span>
+              <span>Douala &amp; Yaoundé</span>
+              <span>Cameroon, Central Africa</span>
+              <span className="text-zinc-900 dark:text-white mt-1">+237 600 000 000</span>
               <span className="text-zinc-700 dark:text-zinc-300">hello@ias-studio.com</span>
             </div>
           </div>
