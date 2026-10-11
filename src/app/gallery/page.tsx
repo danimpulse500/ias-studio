@@ -303,7 +303,7 @@ export default function GalleryPage() {
           </div>
         </section>
 
-        <Footer showBanner={false} />
+        <Footer />
       </div>
 
       {/* ============================================================== */}

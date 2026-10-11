@@ -324,7 +324,7 @@ export default function ContactPage() {
           </div>
         </section>
 
-        <Footer showBanner={false} />
+        <Footer />
       </div>
     </div>
   );
