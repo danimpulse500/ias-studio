@@ -67,7 +67,7 @@ export default function GalleryPage() {
               fill
               priority
               sizes="100vw"
-              className="object-cover opacity-15 dark:opacity-25 scale-[1.02]"
+              className="object-cover object-top opacity-15 dark:opacity-25 scale-[1.02]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-white via-white/85 to-white/50 dark:from-[#15171c] dark:via-[#15171c]/75 dark:to-black/60 transition-colors duration-300" />
           </div>
@@ -188,7 +188,7 @@ export default function GalleryPage() {
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 60vw"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
                 />
               </div>
             </div>
@@ -218,7 +218,7 @@ export default function GalleryPage() {
                       alt={item.title}
                       fill
                       sizes={isWide ? "(max-width: 768px) 100vw, 66vw" : "(max-width: 768px) 100vw, 33vw"}
-                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                      className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
                     />
 
                     <div className="absolute top-3 left-3 right-3 flex items-center z-10">

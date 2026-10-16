@@ -65,7 +65,7 @@ export default function AboutPage() {
               fill
               priority
               sizes="100vw"
-              className="object-cover opacity-15 dark:opacity-20 scale-[1.02]"
+              className="object-cover object-top opacity-15 dark:opacity-20 scale-[1.02]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-white via-white/85 to-white/50 dark:from-[#15171c] dark:via-[#15171c]/80 dark:to-black/60 transition-colors duration-300" />
           </div>
@@ -99,7 +99,7 @@ export default function AboutPage() {
               fill
               priority
               sizes="100vw"
-              className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+              className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.02]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
             <div className="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">

@@ -50,7 +50,7 @@ export default function ContactPage() {
               fill
               priority
               sizes="100vw"
-              className="object-cover opacity-15 dark:opacity-25 scale-[1.02]"
+              className="object-cover object-top opacity-15 dark:opacity-25 scale-[1.02]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-white via-white/85 to-white/50 dark:from-[#15171c] dark:via-[#15171c]/80 dark:to-black/60 transition-colors duration-300" />
           </div>

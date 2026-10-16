@@ -68,7 +68,7 @@ function HighlightCard({ highlight }: { highlight: HighlightItem }) {
           alt={highlight.title}
           fill
           sizes="(max-w-640px) 100vw, (max-w-1024px) 50vw, 33vw"
-          className={`object-cover transition-opacity duration-700 ease-in-out ${idx === activeIndex ? "opacity-100" : "opacity-0"
+          className={`object-cover object-top transition-opacity duration-700 ease-in-out ${idx === activeIndex ? "opacity-100" : "opacity-0"
             }`}
           priority={idx === 0}
         />
@@ -361,7 +361,7 @@ export default function Home() {
                     alt={image.alt}
                     fill
                     sizes="(max-w-768px) 66vw, 50vw"
-                    className="object-cover pointer-events-none opacity-0 transition-opacity duration-300"
+                    className="object-cover object-top pointer-events-none opacity-0 transition-opacity duration-300"
                     onLoadingComplete={(img) => img.classList.remove("opacity-0")}
                   />
                 </div>
@@ -423,7 +423,7 @@ export default function Home() {
                   fill
                   priority={index === 0}
                   sizes="100vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                  className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.02]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8">
@@ -514,7 +514,7 @@ export default function Home() {
                   alt={project.title}
                   fill
                   sizes="(max-w-640px) 100vw, (max-w-1024px) 50vw, 25vw"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105 opacity-0"
+                  className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105 opacity-0"
                   onLoad={(event) => event.currentTarget.classList.remove("opacity-0")}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-40 transition-opacity group-hover:opacity-0" />
