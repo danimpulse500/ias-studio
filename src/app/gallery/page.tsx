@@ -16,7 +16,6 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowUpRight,
-  MapPin,
 } from "lucide-react";
 
 export default function GalleryPage() {
@@ -63,7 +62,7 @@ export default function GalleryPage() {
         <section className="relative w-full rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden bg-white dark:bg-[#15171c] border border-black/[0.08] dark:border-white/[0.08] p-6 sm:p-10 lg:p-12 min-h-[420px] sm:min-h-[460px] flex flex-col justify-between shadow-xl dark:shadow-2xl transition-colors duration-300">
           <div className="absolute inset-0 z-0">
             <Image
-              src="/white_wedding.jpg"
+              src="/images/Wedding%20coverage/IAS_8166.jpg"
               alt="IAS Studio Portfolio"
               fill
               priority
@@ -158,7 +157,7 @@ export default function GalleryPage() {
                       Featured Photo
                     </span>
                     <span className="text-xs text-zinc-500">
-                      {featuredItem.category} • {featuredItem.year}
+                      {featuredItem.category}
                     </span>
                   </div>
 
@@ -170,10 +169,6 @@ export default function GalleryPage() {
                     {featuredItem.story}
                   </p>
 
-                  <div className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
-                    <MapPin className="w-4 h-4 text-zinc-500" />
-                    <span>{featuredItem.location}</span>
-                  </div>
                 </div>
 
                 <div>
@@ -226,19 +221,10 @@ export default function GalleryPage() {
                       className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                     />
 
-                    {/* Category & Year Tags */}
-                    <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
+                    <div className="absolute top-3 left-3 right-3 flex items-center z-10">
                       <span className="px-3 py-1 rounded-full bg-black/70 backdrop-blur-md text-[11px] font-medium text-white">
                         {item.category}
                       </span>
-                      <span className="px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md text-[11px] text-zinc-300">
-                        {item.year}
-                      </span>
-                    </div>
-
-                    <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1.5 text-white text-xs bg-black/60 backdrop-blur-md px-3 py-1 rounded-full">
-                      <MapPin className="w-3.5 h-3.5" />
-                      <span>{item.location}</span>
                     </div>
                   </div>
 
@@ -328,9 +314,6 @@ export default function GalleryPage() {
             </div>
 
             <div className="flex items-center gap-4">
-              <span className="text-zinc-400 hidden sm:inline">
-                {activeItem.location} ({activeItem.year})
-              </span>
               <button
                 onClick={() => setActiveItem(null)}
                 className="p-2 rounded-full bg-white/10 hover:bg-white text-white hover:text-black transition-colors"
@@ -386,7 +369,6 @@ export default function GalleryPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <p className="text-zinc-200 text-center sm:text-left">{activeItem.story}</p>
-            <span className="text-zinc-400 shrink-0">{activeItem.location}</span>
           </div>
         </div>
       )}

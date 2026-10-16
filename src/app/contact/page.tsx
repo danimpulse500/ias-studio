@@ -45,7 +45,7 @@ export default function ContactPage() {
         <section className="relative w-full rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden bg-white dark:bg-[#15171c] border border-black/[0.08] dark:border-white/[0.08] min-h-[420px] sm:min-h-[460px] p-6 sm:p-10 lg:p-12 flex flex-col justify-between shadow-xl dark:shadow-2xl transition-colors duration-300">
           <div className="absolute inset-0 z-0">
             <Image
-              src="/temple_silhouette.jpg"
+              src="/images/THE%20ELEGANT%20LADY/IAS_2786.jpg"
               alt="IAS Studio Contact"
               fill
               priority

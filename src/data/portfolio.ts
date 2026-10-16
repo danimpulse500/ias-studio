@@ -1,195 +1,144 @@
-export interface PortfolioItem {
-  id: string;
-  title: string;
-  category: "Indoor" | "Outdoor" | "Traditional Wedding" | "White Wedding";
-  aspectRatio: "cinema" | "portrait" | "landscape";
-  src: string;
-  year: string;
-  location: string;
-  story: string;
-  camera?: string;
-  lens?: string;
-  filmStock?: string;
-  featured?: boolean;
-}
-
 export const PORTFOLIO_CATEGORIES = [
   "All",
-  "Indoor",
-  "Outdoor",
-  "Traditional Wedding",
-  "White Wedding",
+  "Wedding Coverage",
+  "Best Friends",
+  "Event Photography",
+  "Kids Photography",
+  "Outdoor Home Sessions",
+  "Picture Enlargement",
+  "Product Photography",
+  "Real Estate Photography",
+  "The Elegant Lady",
+  "The Expectant Parents",
+  "The Happy Family",
+  "The Perfect Gentleman",
 ] as const;
 
 export type PortfolioCategory = (typeof PORTFOLIO_CATEGORIES)[number];
+type CollectionCategory = Exclude<PortfolioCategory, "All">;
 
-export const portfolioItems: PortfolioItem[] = [
+export interface PortfolioItem {
+  id: string;
+  title: string;
+  category: CollectionCategory;
+  src: string;
+  story: string;
+  featured?: boolean;
+}
+
+const collections: {
+  category: CollectionCategory;
+  folder: string;
+  files: string[];
+}[] = [
   {
-    id: "wed-trad-01",
-    title: "Cameroonian Traditional Wedding",
-    category: "Traditional Wedding",
-    aspectRatio: "cinema",
-    src: "/traditional_wedding.jpg",
-    year: "2026",
-    location: "Douala & Yaoundé, Cameroon",
-    story: "A vibrant celebration of culture with traditional royal attire, coral beads, and joyous family blessings.",
-    camera: "Hasselblad H6D",
-    lens: "100mm f/2.2",
-    filmStock: "Digital Raw",
-    featured: true,
+    category: "Wedding Coverage",
+    folder: "Wedding coverage",
+    files: [
+      "IAS_8166.jpg",
+      "IAS_8180.jpg",
+      "IAS_3709.jpg",
+      "IAS_3745.jpg",
+      "IAS_3853.jpg",
+      "standard.jpg",
+    ],
   },
   {
-    id: "wed-white-01",
-    title: "Lake Como White Wedding",
-    category: "White Wedding",
-    aspectRatio: "cinema",
-    src: "/white_wedding.jpg",
-    year: "2026",
-    location: "Lake Como, Italy",
-    story: "An outdoor lakeside ceremony with beautiful floral arrangements and classic black-tie style.",
-    camera: "Arri Alexa Mini",
-    lens: "50mm Prime",
-    filmStock: "Color Grade",
-    featured: false,
+    category: "Best Friends",
+    folder: "BEST FRIENDS",
+    files: [
+      "IAS_1110.jpg",
+      "IAS_1126.jpg",
+      "IAS_7169.jpg",
+      "IAS_7247.jpg",
+      "IAS_7643.jpg",
+      "IAS_9479.jpg",
+      "IMG-20260729-WA0006.jpg",
+    ],
   },
   {
-    id: "wed-white-02",
-    title: "Tuscan Sunset Bridal Shoot",
-    category: "White Wedding",
-    aspectRatio: "portrait",
-    src: "/IAS_4484.jpg",
-    year: "2025",
-    location: "Tuscany, Italy",
-    story: "Golden hour bridal portrait captured in the warm evening light over the Tuscan hills.",
-    camera: "Leica SL3",
-    lens: "50mm f/1.4",
-    filmStock: "Digital Raw",
-    featured: false,
+    category: "Event Photography",
+    folder: "EVENT PHOTOGRAPHY",
+    files: ["IMG-20260729-WA0005.jpg"],
   },
   {
-    id: "indoor-01",
-    title: "Studio Portrait Session",
-    category: "Indoor",
-    aspectRatio: "portrait",
-    src: "/portrait_editorial.jpg",
-    year: "2026",
-    location: "Paris, France",
-    story: "Clean and simple black-and-white studio portrait using soft natural window light.",
-    camera: "Leica M11",
-    lens: "50mm f/1.4",
-    filmStock: "Monochrome Raw",
-    featured: false,
+    category: "Kids Photography",
+    folder: "KIDS PHOTOGRAPHY",
+    files: [
+      "IAS_6717.jpg",
+      "IAS_7904.jpg",
+      "IAS_8451.jpg",
+      "IAS_8863.jpg",
+      "IAS_8870.jpg",
+      "IAS_8871.jpg",
+      "IMG-20260729-WA0024.jpg",
+    ],
   },
   {
-    id: "indoor-02",
-    title: "Bridal Preparation",
-    category: "Indoor",
-    aspectRatio: "portrait",
-    src: "/IAS_1603.jpg",
-    year: "2025",
-    location: "Douala, Cameroon",
-    story: "Getting ready before the wedding ceremony with close-up makeup and dress details.",
-    camera: "Hasselblad X2D",
-    lens: "80mm f/1.9",
-    filmStock: "Digital Raw",
-    featured: false,
+    category: "Outdoor Home Sessions",
+    folder: "OUTDOOR- HOME SESSIONS",
+    files: ["IMG-20260729-WA0009.jpg"],
   },
   {
-    id: "indoor-03",
-    title: "Indoor Fashion Shoot",
-    category: "Indoor",
-    aspectRatio: "portrait",
-    src: "/IAS_3900 (2).jpg",
-    year: "2026",
-    location: "Milan, Italy",
-    story: "Contemporary indoor portrait focusing on clean shadows and minimal studio styling.",
-    camera: "Leica SL2",
-    lens: "50mm f/0.95",
-    filmStock: "Digital Raw",
-    featured: false,
+    category: "Picture Enlargement",
+    folder: "PICTURE ENLARGEMENT",
+    files: ["IMG-20260729-WA0010.jpg"],
   },
   {
-    id: "outdoor-01",
-    title: "Morning at Mont Blanc",
-    category: "Outdoor",
-    aspectRatio: "cinema",
-    src: "/landscape_mont_blanc.jpg",
-    year: "2026",
-    location: "Mont Blanc, France",
-    story: "Early morning mountain clouds sweeping across the snowy peaks at sunrise.",
-    camera: "Arri Alexa Mini",
-    lens: "50mm Anamorphic",
-    filmStock: "Color Grade",
-    featured: false,
+    category: "Product Photography",
+    folder: "PRODUCT PHOTOGRAPHY",
+    files: ["IMG-20260729-WA0008.jpg"],
   },
   {
-    id: "outdoor-02",
-    title: "Cabin in the Highlands",
-    category: "Outdoor",
-    aspectRatio: "cinema",
-    src: "/hero_architecture_grass.jpg",
-    year: "2026",
-    location: "Scottish Highlands, UK",
-    story: "A modern timber cabin built right into the green meadows and misty morning hills.",
-    camera: "Hasselblad H6D",
-    lens: "50mm f/3.5",
-    filmStock: "Digital Raw",
-    featured: false,
+    category: "Real Estate Photography",
+    folder: "REAL ESTATE PHOTOGRAPHY",
+    files: ["IMG-20260729-WA0011.jpg"],
   },
   {
-    id: "outdoor-03",
-    title: "Sunset in the Countryside",
-    category: "Outdoor",
-    aspectRatio: "cinema",
-    src: "/countryside_sunset.jpg",
-    year: "2025",
-    location: "Vermont, USA",
-    story: "Late afternoon light over open grass fields and a rustic wooden barn.",
-    camera: "Hasselblad H6D",
-    lens: "100mm f/2.2",
-    filmStock: "Digital Raw",
-    featured: false,
+    category: "The Elegant Lady",
+    folder: "THE ELEGANT LADY",
+    files: [
+      "IAS_2786.jpg",
+      "IAS_5021.jpg",
+      "IAS_6742.jpg",
+      "IAS_8329 CAT.jpg",
+    ],
   },
   {
-    id: "outdoor-04",
-    title: "Wildlife at Sunrise",
-    category: "Outdoor",
-    aspectRatio: "landscape",
-    src: "/wildlife_savanna.jpg",
-    year: "2026",
-    location: "Serengeti, Tanzania",
-    story: "Capturing animals in the golden morning light across the open plains.",
-    camera: "Leica SL3",
-    lens: "280mm Telephoto",
-    filmStock: "Digital Raw",
-    featured: false,
+    category: "The Expectant Parents",
+    folder: "THE EXPECTANT PARENTS",
+    files: ["IMG-20260729-WA0007.jpg"],
   },
   {
-    id: "outdoor-05",
-    title: "Kyoto Temple at Dusk",
-    category: "Outdoor",
-    aspectRatio: "portrait",
-    src: "/temple_silhouette.jpg",
-    year: "2025",
-    location: "Kyoto, Japan",
-    story: "An ancient wooden pagoda framed against the colorful sunset sky.",
-    camera: "Leica M11",
-    lens: "35mm f/1.4",
-    filmStock: "Monochrome Raw",
-    featured: false,
+    category: "The Happy Family",
+    folder: "THE HAPPY FAMILY",
+    files: [
+      "IAS_1119.jpg",
+      "IAS_7921.jpg",
+      "IAS_8329-CAT-Recovered.jpg",
+      "IAS_9639.jpg",
+      "IAS_9644.jpg",
+    ],
   },
   {
-    id: "outdoor-06",
-    title: "Evening Outdoor Reception",
-    category: "Outdoor",
-    aspectRatio: "cinema",
-    src: "/cinema_evening.jpg",
-    year: "2025",
-    location: "Lake Como, Italy",
-    story: "Warm dinner tables and family celebrations under glowing outdoor patio lights.",
-    camera: "Red V-Raptor",
-    lens: "40mm Anamorphic",
-    filmStock: "Color Grade",
-    featured: false,
+    category: "The Perfect Gentleman",
+    folder: "THE PERFECT GENTLEMAN",
+    files: ["IAS_8329-CAT-MEN.jpg"],
   },
 ];
+
+export const portfolioItems: PortfolioItem[] = collections.flatMap(
+  ({ category, folder, files }) =>
+    files.map((file, index) => {
+      const title = file.replace(/\.[^.]+$/, "").replace(/[_-]/g, " ");
+
+      return {
+        id: `${category.toLowerCase().replaceAll(" ", "-")}-${index + 1}`,
+        title,
+        category,
+        src: `/images/${encodeURIComponent(folder)}/${encodeURIComponent(file)}`,
+        story: `A photograph from the ${category.toLowerCase()} collection.`,
+        featured: folder === "Wedding coverage" && file === "IAS_8166.jpg",
+      };
+    }),
+);

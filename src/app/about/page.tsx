@@ -60,7 +60,7 @@ export default function AboutPage() {
         <section className="relative w-full rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden bg-white dark:bg-[#15171c] border border-black/[0.08] dark:border-white/[0.08] p-6 sm:p-10 lg:p-12 flex flex-col gap-10 shadow-xl dark:shadow-2xl transition-colors duration-300">
           <div className="absolute inset-0 z-0 pointer-events-none">
             <Image
-              src="/countryside_sunset.jpg"
+              src="/images/THE%20HAPPY%20FAMILY/IAS_1119.jpg"
               alt="IAS Studio About Us"
               fill
               priority
@@ -94,7 +94,7 @@ export default function AboutPage() {
           {/* Feature Showcase Banner */}
           <div className="relative aspect-[16/9] sm:aspect-[21/9] w-full rounded-3xl overflow-hidden border border-black/10 dark:border-white/10 shadow-2xl bg-zinc-900 group">
             <Image
-              src="/hero_architecture_grass.jpg"
+              src="/images/Wedding%20coverage/IAS_3709.jpg"
               alt="IAS Studio Photography"
               fill
               priority
